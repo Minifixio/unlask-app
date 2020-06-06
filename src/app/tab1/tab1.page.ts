@@ -42,7 +42,6 @@ export class Tab1Page {
   }
 
   initApp() {
-
     this.platform.ready().then(() => {
 
       this.notifService.stickNotification();

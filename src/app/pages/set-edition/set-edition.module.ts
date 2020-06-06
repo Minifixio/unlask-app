@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { QuestionContainerComponent } from 'src/app/components/question-container/question-container.component';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -15,6 +16,6 @@ import { SetEditionPage } from './set-edition.page';
     IonicModule,
     SetEditionPageRoutingModule
   ],
-  declarations: [SetEditionPage]
+  declarations: [SetEditionPage, QuestionContainerComponent]
 })
 export class SetEditionPageModule {}

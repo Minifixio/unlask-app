@@ -1,9 +1,22 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>set-selection</ion-title>
+    <ion-title>Sets</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <div>
+        <ion-fab-button (click)="newSet()" color="primary">
+          <ion-icon name="create"></ion-icon>
+        </ion-fab-button>
+        <ion-label>New set</ion-label>
+      </div>
 
+    </ion-fab-list>
+  </ion-fab>
 </ion-content>
