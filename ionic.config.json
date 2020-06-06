@@ -1,5 +1,7 @@
 {
   "name": "unlock-ask",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
