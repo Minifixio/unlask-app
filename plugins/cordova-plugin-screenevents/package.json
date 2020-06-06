@@ -1,0 +1,70 @@
+{
+  "_from": "cordova-plugin-screenevents",
+  "_id": "cordova-plugin-screenevents@1.0.1",
+  "_inBundle": false,
+  "_integrity": "sha512-SNrLsGgCBjnCpyLQ/ZWq583FB7QvseDS3PvVLakQ7gkIgDJlzZ3srtREbcvVNtdLGTi6DYclCy/ySA0gIJp1JA==",
+  "_location": "/cordova-plugin-screenevents",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-screenevents",
+    "name": "cordova-plugin-screenevents",
+    "escapedName": "cordova-plugin-screenevents",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-screenevents/-/cordova-plugin-screenevents-1.0.1.tgz",
+  "_shasum": "a7fd3e6b3a53578c7ca13eee092ec748ae3b7945",
+  "_spec": "cordova-plugin-screenevents",
+  "_where": "/Users/emile/Documents/CODE/Projects/UnlockPhoneApp/unlock-ask",
+  "author": {
+    "name": "Walter Robins",
+    "email": "wrobins@kent.edu"
+  },
+  "bugs": {
+    "url": "https://github.com/wrobins/cordova-plugin-screenevents/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-screenevents",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "deprecated": false,
+  "description": "Trigger events based on your device's screen state!",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=7.0.0"
+    }
+  ],
+  "homepage": "https://github.com/wrobins/cordova-plugin-screenevents",
+  "keywords": [
+    "cordova",
+    "cordova-android",
+    "cordova-ios",
+    "screen",
+    "event",
+    "events",
+    "app",
+    "state",
+    "on",
+    "off",
+    "ecosystem:cordova"
+  ],
+  "license": "Apache 2.0",
+  "name": "cordova-plugin-screenevents",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wrobins/cordova-plugin-screenevents.git"
+  },
+  "version": "1.0.1"
+}

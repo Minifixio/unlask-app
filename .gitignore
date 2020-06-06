@@ -27,5 +27,7 @@ npm-debug.log*
 /dist
 /node_modules
 /platforms
-/plugins
+/plugins/*
+!/plugins/cordova-plugin-screenevents
+
 /www
