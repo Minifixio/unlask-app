@@ -1,9 +1,42 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    
     <ion-title>{{setMessage}}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="validateInputs()">
+        <ion-icon name="checkmark-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <app-question-container></app-question-container>
+
+  <ion-list>
+    <ion-list-header class="set-name-card">
+        <ion-input [(ngModel)]="setTitle" type="text" [value]="setTitle" placeHolder="Set name..."></ion-input>
+    </ion-list-header>
+
+    <ion-item-sliding *ngFor="let question of questions">
+      <ion-item class="item-question-container">
+        <app-question-container #questionContainer class="question-container" [questionId]="question.question_id" [question]="question.title" [answer]="question.answer.content"></app-question-container>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option (click)="delete(question.question_id)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addQuestion()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

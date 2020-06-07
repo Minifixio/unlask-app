@@ -1,0 +1,20 @@
+.set-name-card {
+    font-size: x-large;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.question-container {
+    width: 100%;
+}
+
+ion-item{
+    --inner-padding-end: 2px;
+    --padding-start:2px;
+    border: 4px solid #3f403f;
+    border-radius: 8px;
+}
+
+ion-item-sliding {
+    margin: 10px 0 10px 0;
+}

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Question } from '../models/Question';
 import { QuestionSet } from '../models/QuestionSet';
+import { Answer } from '../models/Answer';
 declare var cordova: any;
 
 @Injectable({
@@ -82,19 +83,19 @@ export class DatabaseService {
     }
   }
 
-  async increaseSetAmount(id: number): Promise<void> {
+  async increaseSetAmount(setId: number): Promise<void> {
     const updateQuery = 'UPDATE sets SET amount = amount + 1 WHERE set_id = ?';
     try {
-      await this.db.executeSql(updateQuery, [id]);
+      await this.db.executeSql(updateQuery, [setId]);
     } catch (e) {
       throw (e);
     }
   }
 
-  async descreaseSetAmount(id: number): Promise<void> {
+  async descreaseSetAmount(setId: number): Promise<void> {
     const updateQuery = 'UPDATE sets SET amount = amount - 1 WHERE set_id = ?';
     try {
-      await this.db.executeSql(updateQuery, [id]);
+      await this.db.executeSql(updateQuery, [setId]);
     } catch (e) {
       throw (e);
     }
@@ -106,9 +107,21 @@ export class DatabaseService {
     return res;
   }
 
+  async getSet(setId: number): Promise<QuestionSet> {
+    const setQuery = 'SELECT * FROM sets WHERE set_id = ?';
+    const res: QuestionSet = await this.db.executeSql(setQuery, [setId]);
+    return res;
+  }
+
   async getQuestions(setId: number): Promise<Question[]> {
-    const getQuery = 'SELECT * FROM sets';
-    const res: Question[] = await this.db.executeSql(getQuery);
+    const getQuery = 'SELECT * FROM questions WHERE set_id = ?';
+    const res: Question[] = await this.db.executeSql(getQuery, [setId]);
+    return res;
+  }
+
+  async getAnswers(setId: number): Promise<Answer[]> {
+    const getQuery = 'SELECT * FROM answers WHERE set_id = ?';
+    const res: Answer[] = await this.db.executeSql(getQuery, [setId]);
     return res;
   }
 
@@ -116,6 +129,22 @@ export class DatabaseService {
     const amoutQuery = 'SELECT * FROM sets';
     const res: QuestionSet[] = await this.db.executeSql(amoutQuery);
     return res.length;
+  }
+
+  async getSetContent(setId: number): Promise<QuestionSet> {
+    const questions = await this.getQuestions(setId);
+    const answers = await this.getAnswers(setId);
+    const setInfos = await this.getSet(setId);
+    questions.map(question => question.answer = answers.find(answer => answer.question_id === question.question_id));
+
+    const res: QuestionSet = {
+      set_id: setId,
+      title: setInfos.title,
+      amount: questions.length,
+      questions
+    };
+
+    return res;
   }
 
 }
