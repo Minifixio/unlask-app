@@ -14,6 +14,8 @@ import { PowerManagement } from '@ionic-native/power-management/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { Dialogs } from '@ionic-native/dialogs/ngx';
+import { SQLite } from '@ionic-native/sqlite/ngx';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
 
 
 @NgModule({
@@ -27,6 +29,8 @@ import { Dialogs } from '@ionic-native/dialogs/ngx';
     LocalNotifications,
     BackgroundMode,
     Dialogs,
+    SQLite,
+    NativeStorage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

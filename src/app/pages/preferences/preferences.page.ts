@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NotificationsService } from 'src/app/services/notifications.service';
 
 @Component({
   selector: 'app-preferences',
@@ -7,9 +8,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PreferencesPage implements OnInit {
 
-  constructor() { }
+  notificationActive: boolean;
+
+  constructor(
+    private notificationService: NotificationsService
+  ) { }
 
   ngOnInit() {
+  }
+
+  enableNotification() {
+    this.notificationService.stickNotification();
+  }
+
+  disableNotification() {
+    this.notificationService.dismissNotificaiton();
   }
 
 }

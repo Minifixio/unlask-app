@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { SetSelectionPageRoutingModule } from './set-selection-routing.module';
 
 import { SetSelectionPage } from './set-selection.page';
+import { QuestionsSetComponent } from 'src/app/components/questions-set/questions-set.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { SetSelectionPage } from './set-selection.page';
     IonicModule,
     SetSelectionPageRoutingModule
   ],
-  declarations: [SetSelectionPage]
+  declarations: [SetSelectionPage, QuestionsSetComponent]
 })
 export class SetSelectionPageModule {}

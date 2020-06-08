@@ -1,20 +1,19 @@
 
+<ion-item-group>
+  <ion-item-divider>
+    <ion-label class="item-label">Question</ion-label>
+  </ion-item-divider>
 
-  <ion-item-group>
-    <ion-item-divider>
-      <ion-label class="item-label">Question</ion-label>
-    </ion-item-divider>
-  
-    <ion-item>
-      <ion-input [(ngModel)]="question" placeholder="Enter a question" [value]="question"></ion-input>
-    </ion-item>
+  <ion-item>
+    <ion-input #questionInput [(ngModel)]="question" placeholder="Enter a question" [value]="question"></ion-input>
+  </ion-item>
 
-    <ion-item-divider>
-      <ion-label class="item-label">Answer</ion-label>
-    </ion-item-divider>
-  
-    <ion-item>
-      <ion-input [(ngModel)]="answer" placeholder="Enter an answer" [value]="answer"></ion-input>
-    </ion-item>
+  <ion-item-divider>
+    <ion-label class="item-label">Answer</ion-label>
+  </ion-item-divider>
 
-  </ion-item-group>
+  <ion-item>
+    <ion-input #answerInput [(ngModel)]="answer" placeholder="Enter an answer" [value]="answer"></ion-input>
+  </ion-item>
+
+</ion-item-group>

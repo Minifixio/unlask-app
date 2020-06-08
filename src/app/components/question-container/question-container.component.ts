@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { IonInput } from '@ionic/angular';
 
 @Component({
   selector: 'app-question-container',
@@ -10,9 +11,15 @@ export class QuestionContainerComponent implements OnInit {
   @Input() question: string;
   @Input() answer: string;
   @Input() questionId: number;
+  @ViewChild('questionInput') questionInput: IonInput;
+  @ViewChild('answerInput') answerInput: IonInput;
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    setTimeout(() => {
+      this.questionInput.setFocus();
+    }, 500);
+  }
 
 }

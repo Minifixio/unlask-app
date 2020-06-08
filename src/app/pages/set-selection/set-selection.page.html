@@ -5,6 +5,18 @@
 </ion-header>
 
 <ion-content>
+
+  <div class="empty-div">
+    <ion-title class="empty-label" *ngIf="questionSets.length == 0">
+      Wow such empty...
+    </ion-title>
+  </div>
+
+
+  <div *ngFor="let set of questionSets">
+    <app-questions-set [title]="set.title" [amount]="set.amount"></app-questions-set>
+  </div>
+
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
@@ -14,7 +26,7 @@
         <ion-fab-button (click)="newSet()" color="primary">
           <ion-icon name="create"></ion-icon>
         </ion-fab-button>
-        <ion-label>New set</ion-label>
+        <ion-label class="fab-label">New set</ion-label>
       </div>
     </ion-fab-list>
   </ion-fab>

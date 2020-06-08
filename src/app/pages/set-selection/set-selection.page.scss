@@ -1,4 +1,4 @@
-ion-label {
+.fab-label {
     position: absolute;
     top: 10px;
     right: 60px;
@@ -10,4 +10,13 @@ ion-label {
     border-radius: 4px;
     width: fit-content;
     white-space: nowrap;
+}
+
+.empty-label {
+    color: #595959;
+}
+
+.empty-div {
+    margin-top: 50%;
+    text-align: center;
 }

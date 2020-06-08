@@ -28,12 +28,13 @@ export class SetEditionPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private toastService: ToastsService
-    // private dbService: DatabaseService
+    private toastService: ToastsService,
+    private dbService: DatabaseService
   ) {
   }
 
   ngOnInit() {
+
     if (this.router.getCurrentNavigation().extras.state) {
       const setParam = this.router.getCurrentNavigation().extras.state.set;
 
@@ -42,20 +43,20 @@ export class SetEditionPage implements OnInit {
         this.setMessage = 'Edit a set';
         this.edition = true;
         this.setId = setParam;
-        // this.dbService.getSetContent(this.setId).then(setContent => {
-        //   this.questionSet = setContent;
-        //   this.questions = setContent.questions;
-        //   this.setTitle = setContent.title
-        // });
+        this.dbService.getSetContent(this.setId).then(setContent => {
+          this.questionSet = setContent;
+          this.questions = setContent.questions;
+          this.setTitle = setContent.title
+        });
       } else {
         this.setMessage = 'Add a new set';
         this.creation = true;
         this.setId = 0; // To remove
 
-        // this.dbService.getSetAmount().then(num => {
-        //     this.setId = num;
-        //     console.log('new set');
-        //   });
+        this.dbService.getSetAmount().then(num => {
+            this.setId = num;
+            console.log('new set');
+          });
 
         const newQuestion: Question = {
           set_id: this.setId,
@@ -74,10 +75,10 @@ export class SetEditionPage implements OnInit {
       this.creation = true;
       this.setId = 0; // To remove
 
-      // this.dbService.getSetAmount().then(num => {
-      //     this.setId = num;
-      //     console.log('new set');
-      //   });
+      this.dbService.getSetAmount().then(num => {
+          this.setId = num;
+          console.log('new set');
+        });
 
       const newQuestion: Question = {
         set_id: this.setId,

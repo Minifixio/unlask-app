@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
+import { DatabaseService } from 'src/app/services/database.service';
+import { Question } from 'src/app/models/Question';
+import { QuestionSet } from 'src/app/models/QuestionSet';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-set-selection',
@@ -8,11 +12,22 @@ import { Router, NavigationExtras } from '@angular/router';
 })
 export class SetSelectionPage implements OnInit {
 
+  questionSets: QuestionSet[];
+
   constructor(
-    private router: Router
+    private platform: Platform,
+    private router: Router,
+    private dbService: DatabaseService
   ) { }
 
   ngOnInit() {
+    if (this.platform.is('cordova')) {
+      this.dbService.getSets().then(sets => {
+        this.questionSets = sets;
+      });
+    } else {
+      this.questionSets = [];
+    }
   }
 
   newSet() {

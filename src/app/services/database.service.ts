@@ -3,6 +3,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Question } from '../models/Question';
 import { QuestionSet } from '../models/QuestionSet';
 import { Answer } from '../models/Answer';
+import { Platform } from '@ionic/angular';
 declare var cordova: any;
 
 @Injectable({
@@ -13,15 +14,20 @@ export class DatabaseService {
   db: SQLiteObject;
 
   constructor(
-    private sqlite: SQLite
+    private sqlite: SQLite,
+    private platform: Platform
   ) {
-    if (cordova) {
+    if (this.platform.is('cordova')) {
       this.initDB();
     }
    }
 
   async initDB(): Promise<void> {
-    this.db = await this.sqlite.create({name: 'sets'});
+    try {
+      this.db = await this.sqlite.create({name: 'sets'});
+    } catch (e) {
+      console.log(e);
+    }
 
     try {
       await this.db.executeSql('CREATE TABLE sets (set_id, title, amount)');
@@ -107,7 +113,7 @@ export class DatabaseService {
     return res;
   }
 
-  async getSet(setId: number): Promise<QuestionSet> {
+  async getSetInfos(setId: number): Promise<QuestionSet> {
     const setQuery = 'SELECT * FROM sets WHERE set_id = ?';
     const res: QuestionSet = await this.db.executeSql(setQuery, [setId]);
     return res;
@@ -134,7 +140,7 @@ export class DatabaseService {
   async getSetContent(setId: number): Promise<QuestionSet> {
     const questions = await this.getQuestions(setId);
     const answers = await this.getAnswers(setId);
-    const setInfos = await this.getSet(setId);
+    const setInfos = await this.getSetInfos(setId);
     questions.map(question => question.answer = answers.find(answer => answer.question_id === question.question_id));
 
     const res: QuestionSet = {
