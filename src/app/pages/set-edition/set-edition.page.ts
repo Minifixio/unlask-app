@@ -6,6 +6,7 @@ import { Question } from 'src/app/models/Question';
 import { QuestionSet } from 'src/app/models/QuestionSet';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { ViewChildren, QueryList } from '@angular/core';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-set-edition',
@@ -22,6 +23,7 @@ export class SetEditionPage implements OnInit {
   questionSet: QuestionSet;
   questions: Question[];
   setTitle: string;
+  initialTitle: string;
   edition = false;
   creation = false;
 
@@ -29,6 +31,7 @@ export class SetEditionPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private toastService: ToastsService,
+    private storageService: StorageService,
     private dbService: DatabaseService
   ) {
   }
@@ -39,36 +42,33 @@ export class SetEditionPage implements OnInit {
       const setParam = this.router.getCurrentNavigation().extras.state.set;
 
       if (setParam !== null) {
-        console.log('new set');
+        console.log('edit set');
         this.setMessage = 'Edit a set';
         this.edition = true;
         this.setId = setParam;
         this.dbService.getSetContent(this.setId).then(setContent => {
           this.questionSet = setContent;
           this.questions = setContent.questions;
-          this.setTitle = setContent.title
+          this.setTitle = setContent.title;
+          this.initialTitle = this.setTitle;
         });
       } else {
         this.setMessage = 'Add a new set';
         this.creation = true;
-        this.setId = 0; // To remove
-
-        this.dbService.getSetAmount().then(num => {
-            this.setId = num;
-            console.log('new set');
-          });
-
-        const newQuestion: Question = {
-          set_id: this.setId,
-          question_id: 0,
-          title: '',
-          answer: {
+        this.dbService.getSetAmount().then(res => {
+          this.setId = res;
+          const newQuestion: Question = {
             set_id: this.setId,
             question_id: 0,
-            content: ''
-          }
-        };
-        this.questions = [newQuestion];
+            title: '',
+            answer: {
+              set_id: this.setId,
+              question_id: 0,
+              content: ''
+            }
+          };
+          this.questions = [newQuestion];
+          });
       }
     } else { // To remove
       this.setMessage = 'Add a new set';
@@ -108,10 +108,9 @@ export class SetEditionPage implements OnInit {
     this.questions.push(newQuestion);
   }
 
-  validateInputs() {
+  async validateInputs() {
     if (this.creation) {
       this.questions = this.mapQuestions(this.questionContainers);
-      this.questions.map(question => question.title && question.answer.content);
       this.questions.forEach(question => {
         if ((question.title === '' && question.answer.content !== '') || (question.answer.content === '' && question.title !== '')) {
           this.toastService.error(`Question n°${question.question_id} must be fulfilled`);
@@ -129,23 +128,65 @@ export class SetEditionPage implements OnInit {
         return;
       }
 
-      console.log(this.questions)
+      const newSet: QuestionSet = {
+        set_id: this.setId,
+        title: this.setTitle,
+        amount: this.questions.length,
+        questions: this.questions
+      };
+
+      await this.dbService.newSet(newSet);
+      this.router.navigateByUrl('/tabs/selection');
+    }
+
+    if (this.edition) {
+      const newQuestions = this.mapQuestions(this.questionContainers);
+
+      for (const question of newQuestions) {
+        const matchingQuestion = this.questions.find(q => q.set_id === question.set_id);
+
+        if (!matchingQuestion) {
+          await this.dbService.addQuestion(question);
+        }
+
+        if (matchingQuestion.title !== question.title) {
+          await this.dbService.editQuestion(this.setId, question.question_id, question.title);
+        }
+
+        if (matchingQuestion.answer.content !== question.answer.content) {
+          await this.dbService.editAnswer(this.setId, question.question_id, question.answer.content);
+        }
+      }
+
+      if (this.questions.length > newQuestions.length) {
+        for (let i = newQuestions.length; i < this.questions.length; i++) {
+          this.dbService.deleteQuestion(this.setId, this.questions[i].question_id);
+        }
+      }
+
+      if (this.initialTitle !== this.setTitle) {
+        await this.dbService.editSetTitle(this.setId, this.setTitle);
+      }
+
+      this.router.navigateByUrl('/tabs/selection');
     }
 
   }
 
   mapQuestions(questionComponents: QueryList<QuestionContainerComponent>): Question[] {
     const res: Question[] = [];
+    let index = 0;
 
-    questionComponents.forEach(question => {
+    questionComponents.filter(q => (q.question !== '' && q.answer !== '')).forEach(question => {
+      index += 1;
       const returnedQuestion: Question = {
         set_id: this.setId,
         title: question.question,
-        question_id: question.questionId,
+        question_id: index,
         answer: {
           set_id: this.setId,
           content: question.answer,
-          question_id: question.questionId
+          question_id: index
         }
       };
       res.push(returnedQuestion);

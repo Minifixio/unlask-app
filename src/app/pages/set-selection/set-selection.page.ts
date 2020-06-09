@@ -4,6 +4,7 @@ import { DatabaseService } from 'src/app/services/database.service';
 import { Question } from 'src/app/models/Question';
 import { QuestionSet } from 'src/app/models/QuestionSet';
 import { Platform } from '@ionic/angular';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-set-selection',
@@ -12,21 +13,22 @@ import { Platform } from '@ionic/angular';
 })
 export class SetSelectionPage implements OnInit {
 
-  questionSets: QuestionSet[];
+  questionSets: Promise<QuestionSet[]>;
 
   constructor(
     private platform: Platform,
     private router: Router,
+    private storageService: StorageService,
     private dbService: DatabaseService
   ) { }
 
-  ngOnInit() {
-    if (this.platform.is('cordova')) {
-      this.dbService.getSets().then(sets => {
-        this.questionSets = sets;
+  ngOnInit() {}
+
+  ionViewDidEnter() {
+    if (this.platform.is('cordova') || this.platform.is('android')) {
+      this.dbService.initDB().then(() => {
+        this.questionSets = this.dbService.getSets();
       });
-    } else {
-      this.questionSets = [];
     }
   }
 

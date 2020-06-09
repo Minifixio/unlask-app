@@ -1,13 +1,23 @@
 <ion-card>
 
+  <ion-toggle checked></ion-toggle>
 
     <ion-title>
-      <ion-icon class="set-icon" name="file-tray-full"></ion-icon>      
-      {{title}}
+      <div class="title-div">
+        <div>
+          <ion-icon class="set-icon" name="file-tray-full"></ion-icon>      
+          {{title}}
+        </div>
+
+        <ion-label class="amount-label">
+          x {{amount}}
+          <ion-icon class="set-icon" name="reader"></ion-icon>
+        </ion-label>
+      </div>
+
     </ion-title>
 
     <ion-label>
-      x {{amount}}
-      <ion-icon class="set-icon" name="reader"></ion-icon>    
+      <ion-icon (click)="editAction()" class="edit-icon" name="settings-sharp"></ion-icon>        
     </ion-label>
 </ion-card>

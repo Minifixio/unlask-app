@@ -6,15 +6,14 @@
 
 <ion-content>
 
-  <div class="empty-div">
-    <ion-title class="empty-label" *ngIf="questionSets.length == 0">
+  <div *ngIf="!questionSets" class="empty-div">
+    <ion-title class="empty-label">
       Wow such empty...
     </ion-title>
   </div>
 
-
-  <div *ngFor="let set of questionSets">
-    <app-questions-set [title]="set.title" [amount]="set.amount"></app-questions-set>
+  <div *ngFor="let set of questionSets | async">
+    <app-questions-set [title]="set.title" [amount]="set.amount" [setId]="set.set_id" (editSet)="editSet($event)"></app-questions-set>
   </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
