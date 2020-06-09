@@ -71,12 +71,14 @@ export class DatabaseService {
   }
 
   async newSet(set: QuestionSet): Promise<void> {
-    const newSetQuery = 'INSERT INTO sets (set_id, title) VALUES (?, ?)';
-    await this.db.executeSql(newSetQuery, [set.set_id, set.title]);
+    const newSetQuery = 'INSERT INTO sets (set_id, title, amount) VALUES (?, ?, ?)';
+    await this.db.executeSql(newSetQuery, [set.set_id, set.title, 0]);
 
     for (const question of set.questions) {
       await this.addQuestion(question);
+      console.log('add');
     }
+    console.log('done');
   }
 
   async increaseSetAmount(setId: number): Promise<void> {
@@ -100,6 +102,8 @@ export class DatabaseService {
   async getSets(): Promise<QuestionSet[]> {
     const getQuery = 'SELECT * FROM sets';
     const res: QuestionSet[] = this.formatDatas<QuestionSet>(await this.db.executeSql(getQuery, []));
+
+    console.log(res);
     return res;
   }
 
@@ -122,7 +126,6 @@ export class DatabaseService {
   }
 
   async getSetAmount(): Promise<number> {
-    const amoutQuery = 'SELECT * FROM sets';
     const res: QuestionSet[] = await this.getSets();
     return res.length;
   }

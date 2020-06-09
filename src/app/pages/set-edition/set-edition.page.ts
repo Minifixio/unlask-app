@@ -134,33 +134,49 @@ export class SetEditionPage implements OnInit {
         amount: this.questions.length,
         questions: this.questions
       };
+      console.log(newSet);
 
       await this.dbService.newSet(newSet);
+      console.log('resolved');
       this.router.navigateByUrl('/tabs/selection');
     }
 
     if (this.edition) {
       const newQuestions = this.mapQuestions(this.questionContainers);
 
-      for (const question of newQuestions) {
-        const matchingQuestion = this.questions.find(q => q.set_id === question.set_id);
+      if (newQuestions.length > this.questions.length) {
+        for (const question of newQuestions) {
+          const matchingQuestion = this.questions.find(q => q.set_id === question.set_id);
 
-        if (!matchingQuestion) {
-          await this.dbService.addQuestion(question);
-        }
+          if (!matchingQuestion) {
+            await this.dbService.addQuestion(question);
+          }
 
-        if (matchingQuestion.title !== question.title) {
-          await this.dbService.editQuestion(this.setId, question.question_id, question.title);
-        }
+          if (matchingQuestion.title !== question.title) {
+            await this.dbService.editQuestion(this.setId, question.question_id, question.title);
+          }
 
-        if (matchingQuestion.answer.content !== question.answer.content) {
-          await this.dbService.editAnswer(this.setId, question.question_id, question.answer.content);
+          if (matchingQuestion.answer.content !== question.answer.content) {
+            await this.dbService.editAnswer(this.setId, question.question_id, question.answer.content);
+          }
         }
       }
 
-      if (this.questions.length > newQuestions.length) {
-        for (let i = newQuestions.length; i < this.questions.length; i++) {
-          this.dbService.deleteQuestion(this.setId, this.questions[i].question_id);
+      if (newQuestions.length > this.questions.length) {
+        for (const question of this.questions) {
+          const matchingQuestion = newQuestions.find(q => q.set_id === question.set_id);
+
+          if (!matchingQuestion) {
+            await this.dbService.deleteQuestion(this.setId, question.question_id);
+          }
+
+          if (matchingQuestion.title !== question.title) {
+            await this.dbService.editQuestion(this.setId, question.question_id, question.title);
+          }
+
+          if (matchingQuestion.answer.content !== question.answer.content) {
+            await this.dbService.editAnswer(this.setId, question.question_id, question.answer.content);
+          }
         }
       }
 

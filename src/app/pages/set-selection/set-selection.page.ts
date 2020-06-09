@@ -24,10 +24,16 @@ export class SetSelectionPage implements OnInit {
 
   ngOnInit() {}
 
+  ionViewWillEnter() {
+
+  }
+
   ionViewDidEnter() {
+    console.log('enter')
     if (this.platform.is('cordova') || this.platform.is('android')) {
       this.dbService.initDB().then(() => {
         this.questionSets = this.dbService.getSets();
+        console.log(this.questionSets);
       });
     }
   }

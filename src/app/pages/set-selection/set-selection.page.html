@@ -1,12 +1,17 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Sets</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="newSet()">
+        <ion-icon class="add-icon" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <div *ngIf="!questionSets" class="empty-div">
+  <div *ngIf="(quesitonSets | async)?.length == 0 " class="empty-div">
     <ion-title class="empty-label">
       Wow such empty...
     </ion-title>
@@ -15,19 +20,5 @@
   <div *ngFor="let set of questionSets | async">
     <app-questions-set [title]="set.title" [amount]="set.amount" [setId]="set.set_id" (editSet)="editSet($event)"></app-questions-set>
   </div>
-
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="top">
-      <div>
-        <ion-fab-button (click)="newSet()" color="primary">
-          <ion-icon name="create"></ion-icon>
-        </ion-fab-button>
-        <ion-label class="fab-label">New set</ion-label>
-      </div>
-    </ion-fab-list>
-  </ion-fab>
 
 </ion-content>
