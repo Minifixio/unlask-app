@@ -3,6 +3,7 @@ import { Platform } from '@ionic/angular';
 import { PowerManagement } from '@ionic-native/power-management/ngx';
 import { Dialogs } from '@ionic-native/dialogs/ngx';
 import { HttpService } from './http.service';
+import { Router } from '@angular/router';
 
 declare var cordova: any;
 declare var window: any;
@@ -19,7 +20,8 @@ export class ListenerService {
     public platform: Platform,
     private httpService: HttpService,
     private powerManagement: PowerManagement,
-    private dialogs: Dialogs
+    private dialogs: Dialogs,
+    private router: Router
   ) {
     this.startListening();
   }
@@ -52,9 +54,7 @@ export class ListenerService {
 
     cordova.plugins.ScreenEvents.listenerInit(async (event: string) => {
       window.plugins.bringtofront();
-      this.dialogs.confirm('Hello', 'Hello').then((num) => {
-        mayflower.moveTaskToBack();
-      });
+      this.router.navigateByUrl('/question');
       // await this.httpService.postEvent(event);
     });
   }

@@ -1,0 +1,12 @@
+<ion-content>
+  <h1 *ngIf="questionTitle" class="question-title">
+    {{questionTitle}}
+  </h1>
+  <div class="answers-div">
+    <div *ngFor="let question of questions | async" class="answers-solo-div">
+      <ion-button (click)="select(question.question_id)" color="dark">
+        <ion-label>{{question.answer}}</ion-label>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

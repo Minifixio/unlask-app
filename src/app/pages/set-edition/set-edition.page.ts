@@ -132,6 +132,7 @@ export class SetEditionPage implements OnInit {
         set_id: this.setId,
         title: this.setTitle,
         amount: this.questions.length,
+        active: true,
         questions: this.questions
       };
       console.log(newSet);
@@ -184,7 +185,7 @@ export class SetEditionPage implements OnInit {
         await this.dbService.editSetTitle(this.setId, this.setTitle);
       }
 
-      this.router.navigateByUrl('/tabs/selection');
+      this.router.navigateByUrl('/selection');
     }
 
   }

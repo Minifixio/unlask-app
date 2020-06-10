@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'set-selection',
     // component: SetSelectionPage
     loadChildren: () => import('./pages/set-selection/set-selection.module').then( m => m.SetSelectionPageModule)
+  },
+  {
+    path: 'question',
+    loadChildren: () => import('./pages/question/question.module').then( m => m.QuestionPageModule)
   }
 ];
 @NgModule({

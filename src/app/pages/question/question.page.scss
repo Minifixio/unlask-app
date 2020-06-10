@@ -1,0 +1,24 @@
+.question-title {
+    text-align: center;
+}
+
+.answers-div {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.answers-solo-div {
+    height: 100%;
+}
+
+ion-button {
+    margin: 10px;
+    font-size: xx-large;
+    height: 100%;
+    width: 100%;
+}
+
+ion-label {
+    margin: 10px;
+}

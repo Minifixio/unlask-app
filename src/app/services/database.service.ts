@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-import { Question } from '../models/Question';
+import { Question, SimpleQuestion } from '../models/Question';
 import { QuestionSet } from '../models/QuestionSet';
 import { Answer } from '../models/Answer';
 import { Platform } from '@ionic/angular';
@@ -25,7 +25,8 @@ export class DatabaseService {
       await this.sqlite.selfTest();
       this.db = await this.sqlite.create({name: 'sets', location: 'default'});
       await this.db.open();
-      await this.db.executeSql('CREATE TABLE IF NOT EXISTS sets (set_id INTEGER PRIMARY KEY, title TEXT, amount INTEGER)', []);
+      // tslint:disable-next-line: max-line-length
+      await this.db.executeSql('CREATE TABLE IF NOT EXISTS sets (set_id INTEGER PRIMARY KEY, title TEXT, amount INTEGER, active BOOLEAN)', []);
       await this.db.executeSql('CREATE TABLE IF NOT EXISTS questions (set_id INTEGER, question_id INTEGER, title TEXT)', []);
       await this.db.executeSql('CREATE TABLE IF NOT EXISTS answers (set_id INTEGER, question_id INTEGER, content TEXT)', []);
     } catch (e) {
@@ -71,14 +72,21 @@ export class DatabaseService {
   }
 
   async newSet(set: QuestionSet): Promise<void> {
-    const newSetQuery = 'INSERT INTO sets (set_id, title, amount) VALUES (?, ?, ?)';
-    await this.db.executeSql(newSetQuery, [set.set_id, set.title, 0]);
+    const newSetQuery = 'INSERT INTO sets (set_id, title, amount, active) VALUES (?, ?, ?, ?)';
+    await this.db.executeSql(newSetQuery, [set.set_id, set.title, 0, true]);
 
+    console.log(set);
     for (const question of set.questions) {
       await this.addQuestion(question);
       console.log('add');
     }
+    console.log(await this.getQuestions(set.set_id));
     console.log('done');
+  }
+
+  async changeSetStatus(setId: number, status: boolean): Promise<void> {
+    const statusQuery = 'UPDATE sets SET status = ? WHERE set_id = ?';
+    await this.db.executeSql(statusQuery, [setId, status]);
   }
 
   async increaseSetAmount(setId: number): Promise<void> {
@@ -140,8 +148,22 @@ export class DatabaseService {
       set_id: setId,
       title: setInfos.title,
       amount: questions.length,
+      active: setInfos.active,
       questions
     };
+
+    return res;
+  }
+
+  async getRandomQuestions(): Promise<SimpleQuestion[]> {
+    const randomSetIdQuery = 'SELECT * FROM sets WHERE active = "true" ORDER BY RANDOM() LIMIT 1';
+    console.log(await this.getSets());
+
+    const selectedSet: QuestionSet = this.formatDatas<QuestionSet>(await this.db.executeSql(randomSetIdQuery, []))[0];
+    // tslint:disable-next-line: max-line-length
+    const randomQuestionQuery = 'SELECT q.title as question, a.content as answer, q.question_id FROM questions q, answers a WHERE q.set_id = ? AND q.question_id = a.question_id ORDER BY RANDOM() LIMIT 4';
+    // tslint:disable-next-line: max-line-length
+    const res = this.formatDatas<SimpleQuestion>(await this.db.executeSql(randomQuestionQuery, [selectedSet.set_id]));
 
     return res;
   }
@@ -149,15 +171,25 @@ export class DatabaseService {
   async clearDb() {
     const clearSetsQuery = 'DELETE FROM sets';
     const clearQuestionsQuery = 'DELETE FROM questions';
-    const clearAnswersQuery = 'DELETE FROM questions';
+    const clearAnswersQuery = 'DELETE FROM answers';
     await this.db.executeSql(clearSetsQuery, []);
     await this.db.executeSql(clearQuestionsQuery, []);
     await this.db.executeSql(clearAnswersQuery, []);
   }
 
+
+  async deleteDb() {
+    const deleteSetsQuery = 'DROP TABLE sets';
+    const deleteQuestionsQuery = 'DROP TABLE questions';
+    const deleteAnswersQuery = 'DROP TABLE answers';
+    await this.db.executeSql(deleteSetsQuery, []);
+    await this.db.executeSql(deleteQuestionsQuery, []);
+    await this.db.executeSql(deleteAnswersQuery, []);
+  }
+
   formatDatas<T>(datas: DBResult): T[] {
     const res: any[] = [];
-    console.log(datas.rows.length)
+    console.log(datas.rows.length);
 
     for (let i = 0; i < datas.rows.length; i++) {
       res.push(datas.rows.item(i));
@@ -173,6 +205,7 @@ export class DatabaseService {
       title: 'test',
       set_id: 0,
       amount: 2,
+      active: false,
       questions: [
         {
           title: 'test0',
@@ -200,6 +233,7 @@ export class DatabaseService {
       title: 'test',
       set_id: 1,
       amount: 2,
+      active: true,
       questions: [
         {
           title: 'test0',

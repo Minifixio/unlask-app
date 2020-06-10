@@ -6,3 +6,9 @@ export interface Question {
     title: string;
     answer: Answer;
 }
+
+export interface SimpleQuestion {
+    question_id: number;
+    question: string;
+    answer: string;
+}

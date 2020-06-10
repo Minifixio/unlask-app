@@ -1,6 +1,6 @@
 <ion-card>
 
-  <ion-toggle checked></ion-toggle>
+  <ion-toggle (ionChange)="changeStatus($event)" [checked]="active"></ion-toggle>
 
     <ion-title>
       <div class="title-div">

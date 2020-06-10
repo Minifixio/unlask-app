@@ -34,6 +34,7 @@ export class SetSelectionPage implements OnInit {
     console.log('enter')
     if (this.platform.is('cordova') || this.platform.is('android')) {
       this.dbService.initDB().then(() => {
+        this.dbService.getRandomQuestions().then(res => console.log(res));
         this.questionSets = this.dbService.getSets();
         console.log(this.questionSets);
       });
