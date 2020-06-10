@@ -12,7 +12,7 @@
   </ion-item-divider>
   <ion-item>
     <ion-label>Show notifications</ion-label>
-    <ion-toggle slot="end" checked></ion-toggle>
+    <ion-toggle (ionChange)="notificationPref($event)" slot="end" checked></ion-toggle>
   </ion-item>
 
   <ion-item-divider>

@@ -138,7 +138,7 @@ export class SetEditionPage implements OnInit {
 
       await this.dbService.newSet(newSet);
       console.log('resolved');
-      this.router.navigateByUrl('/tabs/selection');
+      this.router.navigateByUrl('/set-selection');
     }
 
     if (this.edition) {

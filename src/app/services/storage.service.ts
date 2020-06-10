@@ -13,6 +13,21 @@ export class StorageService {
     private nativeStorage: NativeStorage
   ) { }
 
+  async getNotificationPref(): Promise<boolean> {
+   const pref = await this.nativeStorage.getItem('notification');
+   console.log('Notification pref:', pref);
+   if (!pref) {
+    await this.nativeStorage.setItem('notification', true);
+    return true;
+   } else {
+     return pref;
+   }
+  }
+
+  async setNotificationPref(pref: boolean): Promise<void> {
+    await this.nativeStorage.setItem('notification', pref);
+  }
+
   getSetKey(setId: number): string {
     return `question-set-${setId}`;
   }

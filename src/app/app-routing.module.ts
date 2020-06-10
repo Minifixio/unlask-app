@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { SetSelectionPage } from './pages/set-selection/set-selection.page';
 
 const routes: Routes = [
   {
@@ -16,6 +17,7 @@ const routes: Routes = [
   },
   {
     path: 'set-selection',
+    // component: SetSelectionPage
     loadChildren: () => import('./pages/set-selection/set-selection.module').then( m => m.SetSelectionPageModule)
   }
 ];

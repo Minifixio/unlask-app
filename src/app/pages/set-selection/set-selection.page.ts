@@ -22,7 +22,9 @@ export class SetSelectionPage implements OnInit {
     private dbService: DatabaseService
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('init')
+  }
 
   ionViewWillEnter() {
 

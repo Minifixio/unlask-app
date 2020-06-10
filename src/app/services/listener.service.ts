@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { PowerManagement } from '@ionic-native/power-management/ngx';
-import { NotificationsService } from '../services/notifications.service';
-import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { Dialogs } from '@ionic-native/dialogs/ngx';
 import { HttpService } from './http.service';
 
@@ -27,29 +25,26 @@ export class ListenerService {
   }
 
   startListening() {
-    this.platform.ready().then(() => {
+    this.listenTask = setInterval(() => {
+      const date = new Date();
+      // this.httpService.postEvent('Interval occured at ' + date.toUTCString());
+      this.subUnlockEvent();
+    }, 3000);
 
-      this.listenTask = setInterval(() => {
-        const date = new Date();
-        this.httpService.postEvent('Interval occured at ' + date.toUTCString());
-        this.subUnlockEvent();
-      }, 3000);
+    this.powerManagement.acquire()
+    .then(() => {
+      console.log('Wakelock acquired');
+    })
+    .catch(() => {
+      console.log('Failed to acquire wakelock');
+    });
 
-      this.powerManagement.acquire()
-      .then(() => {
-        console.log('Wakelock acquired');
-      })
-      .catch(() => {
-        console.log('Failed to acquire wakelock');
-      });
-
-      this.powerManagement.setReleaseOnPause(false)
-      .then(() => {
-        console.log('setReleaseOnPause successfully');
-      })
-      .catch(() => {
-        console.log('Failed to set');
-      });
+    this.powerManagement.setReleaseOnPause(false)
+    .then(() => {
+      console.log('setReleaseOnPause successfully');
+    })
+    .catch(() => {
+      console.log('Failed to set');
     });
   }
 
@@ -60,7 +55,7 @@ export class ListenerService {
       this.dialogs.confirm('Hello', 'Hello').then((num) => {
         mayflower.moveTaskToBack();
       });
-      await this.httpService.postEvent(event);
+      // await this.httpService.postEvent(event);
     });
   }
 }

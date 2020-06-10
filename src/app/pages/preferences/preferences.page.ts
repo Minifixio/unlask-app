@@ -17,12 +17,12 @@ export class PreferencesPage implements OnInit {
   ngOnInit() {
   }
 
-  enableNotification() {
-    this.notificationService.stickNotification();
-  }
-
-  disableNotification() {
-    this.notificationService.dismissNotificaiton();
+  async notificationPref(event: CustomEvent) {
+    if (event.detail.checked) {
+      await this.notificationService.enableNotification();
+    } else {
+      await this.notificationService.disableNotification();
+    }
   }
 
 }

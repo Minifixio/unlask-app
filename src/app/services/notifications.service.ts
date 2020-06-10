@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,29 +8,42 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 export class NotificationsService {
 
   constructor(
-    private localNotifications: LocalNotifications
-  ) {
-    this.stickNotification();
-   }
+    private localNotifications: LocalNotifications,
+    private storageService: StorageService
+  ) { }
 
+  async init() {
+    const activated = await this.storageService.getNotificationPref();
 
-  async stickNotification() {
-    const hasPermission = await this.localNotifications.hasPermission();
-
-    if (hasPermission === false) {
-      this.localNotifications.requestPermission();
+    if (activated) {
+      await this.stickNotification();
     }
-
-    this.localNotifications.schedule({
-      id: 1,
-      title: 'Unlock app is running',
-      sticky: true,
-      foreground: true,
-      priority: -2
-    });
   }
 
-  dismissNotificaiton() {
-    this.localNotifications.clear(1);
+   async stickNotification() {
+      const hasPermission = await this.localNotifications.hasPermission();
+
+      if (hasPermission === false) {
+        this.localNotifications.requestPermission();
+      }
+
+      this.localNotifications.schedule({
+        id: 1,
+        title: 'Unlock app is running',
+        sticky: true,
+        foreground: true,
+        priority: -2
+      });
   }
+
+  async enableNotification() {
+    await this.storageService.setNotificationPref(true);
+    await this.stickNotification();
+  }
+
+  async disableNotification() {
+    await this.storageService.setNotificationPref(false);
+    await this.localNotifications.clear(1);
+  }
+
 }
