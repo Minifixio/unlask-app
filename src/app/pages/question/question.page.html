@@ -3,10 +3,17 @@
     {{questionTitle}}
   </h1>
   <div class="answers-div">
-    <div *ngFor="let question of questions | async" class="answers-solo-div">
-      <ion-button (click)="select(question.question_id)" color="dark">
-        <ion-label>{{question.answer}}</ion-label>
-      </ion-button>
+    <div *ngFor="let question of questions" class="answers-solo-div">
+      <!-- <ion-button text-wrap (click)="select(question.question_id)" color="dark">
+        <span class="submit">{{question.answer}}</span>
+        <span></span>
+        <span class="check"><i class="fa fa-check"></i></span>
+      </ion-button> -->
+      <button class="button">
+        <span class="submit">{{question.answer}}</span>
+        <span></span>
+        <span class="check"><ion-icon name="checkmark-sharp"></ion-icon></span>
+      </button>
     </div>
   </div>
 </ion-content>

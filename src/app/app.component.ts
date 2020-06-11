@@ -24,10 +24,12 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-      this.listenerService.startListening();
-      this.notificationService.init();
+      if (this.platform.is('android') || this.platform.is('cordova')) {
+        this.statusBar.styleDefault();
+        this.splashScreen.hide();
+        this.listenerService.startListening();
+        this.notificationService.init();
+      }
     });
   }
 }
