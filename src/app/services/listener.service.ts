@@ -23,7 +23,8 @@ export class ListenerService {
     private dialogs: Dialogs,
     private router: Router
   ) {
-    if (this.platform.is('android') || this.platform.is('cordova')) {
+    if (this.platform.is('cordova')) {
+      console.log('start listening');
       this.startListening();
     }
   }

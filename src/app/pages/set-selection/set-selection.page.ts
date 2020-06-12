@@ -5,6 +5,7 @@ import { Question } from 'src/app/models/Question';
 import { QuestionSet } from 'src/app/models/QuestionSet';
 import { Platform } from '@ionic/angular';
 import { StorageService } from 'src/app/services/storage.service';
+import { TabsPage } from 'src/app/tabs/tabs.page';
 
 @Component({
   selector: 'app-set-selection',
@@ -19,20 +20,20 @@ export class SetSelectionPage implements OnInit {
     private platform: Platform,
     private router: Router,
     private storageService: StorageService,
-    private dbService: DatabaseService
+    private dbService: DatabaseService,
+    private tabsPage: TabsPage
   ) { }
 
   ngOnInit() {
-    console.log('init')
-  }
-
-  ionViewWillEnter() {
-
+    this.tabsPage.pageChange.subscribe((route) => { if (route === '/tabs/selection') { this.refresh(); }});
   }
 
   ionViewDidEnter() {
-    console.log('enter')
-    if (this.platform.is('cordova') || this.platform.is('android')) {
+    this.refresh();
+  }
+
+  refresh() {
+    if (this.platform.is('cordova')) {
       this.dbService.initDB().then(() => {
         this.dbService.getRandomQuestions().then(res => console.log(res));
         this.questionSets = this.dbService.getSets();

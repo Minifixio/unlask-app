@@ -139,44 +139,45 @@ export class SetEditionPage implements OnInit {
 
       await this.dbService.newSet(newSet);
       console.log('resolved');
-      this.router.navigateByUrl('/set-selection');
+      this.router.navigateByUrl('/tabs/selection');
     }
 
     if (this.edition) {
       const newQuestions = this.mapQuestions(this.questionContainers);
+      console.log(newQuestions, this.questions);
 
-      if (newQuestions.length > this.questions.length) {
+      if (newQuestions.length >= this.questions.length) {
         for (const question of newQuestions) {
-          const matchingQuestion = this.questions.find(q => q.set_id === question.set_id);
-
+          const matchingQuestion = this.questions.find(q => q.question_id === question.question_id);
+          console.log(matchingQuestion);
           if (!matchingQuestion) {
             await this.dbService.addQuestion(question);
-          }
-
-          if (matchingQuestion.title !== question.title) {
-            await this.dbService.editQuestion(this.setId, question.question_id, question.title);
-          }
-
-          if (matchingQuestion.answer.content !== question.answer.content) {
-            await this.dbService.editAnswer(this.setId, question.question_id, question.answer.content);
+          } else {
+            if (matchingQuestion.title !== question.title) {
+              await this.dbService.editQuestion(this.setId, question.question_id, question.title);
+            }
+  
+            if (matchingQuestion.answer.content !== question.answer.content) {
+              await this.dbService.editAnswer(this.setId, question.question_id, question.answer.content);
+            }
           }
         }
       }
 
-      if (newQuestions.length > this.questions.length) {
+      if (newQuestions.length < this.questions.length) {
         for (const question of this.questions) {
-          const matchingQuestion = newQuestions.find(q => q.set_id === question.set_id);
+          const matchingQuestion = newQuestions.find(q => q.question_id === question.question_id);
 
           if (!matchingQuestion) {
             await this.dbService.deleteQuestion(this.setId, question.question_id);
-          }
+          } else {
+            if (matchingQuestion.title !== question.title) {
+              await this.dbService.editQuestion(this.setId, question.question_id, question.title);
+            }
 
-          if (matchingQuestion.title !== question.title) {
-            await this.dbService.editQuestion(this.setId, question.question_id, question.title);
-          }
-
-          if (matchingQuestion.answer.content !== question.answer.content) {
-            await this.dbService.editAnswer(this.setId, question.question_id, question.answer.content);
+            if (matchingQuestion.answer.content !== question.answer.content) {
+              await this.dbService.editAnswer(this.setId, question.question_id, question.answer.content);
+            }
           }
         }
       }
@@ -185,7 +186,7 @@ export class SetEditionPage implements OnInit {
         await this.dbService.editSetTitle(this.setId, this.setTitle);
       }
 
-      this.router.navigateByUrl('/selection');
+      this.router.navigateByUrl('/tabs/selection');
     }
 
   }

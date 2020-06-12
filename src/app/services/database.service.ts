@@ -157,13 +157,19 @@ export class DatabaseService {
 
   async getRandomQuestions(): Promise<SimpleQuestion[]> {
     const randomSetIdQuery = 'SELECT * FROM sets WHERE active = "true" ORDER BY RANDOM() LIMIT 1';
-    console.log(await this.getSets());
 
     const selectedSet: QuestionSet = this.formatDatas<QuestionSet>(await this.db.executeSql(randomSetIdQuery, []))[0];
     // tslint:disable-next-line: max-line-length
-    const randomQuestionQuery = 'SELECT q.title as question, a.content as answer, q.question_id FROM questions q, answers a WHERE q.set_id = ? AND q.question_id = a.question_id ORDER BY RANDOM() LIMIT 4';
+    const randomQuestionQuery = 'SELECT q.title as question, a.content as answer, q.question_id, q.set_id FROM questions q, answers a WHERE q.set_id = ? AND q.question_id = a.question_id ORDER BY RANDOM() LIMIT 4';
     // tslint:disable-next-line: max-line-length
     const res = this.formatDatas<SimpleQuestion>(await this.db.executeSql(randomQuestionQuery, [selectedSet.set_id]));
+
+    // In order to make sure questions from other sets with same question_id don't match the right answer
+    res.map(q => {
+      if (q.set_id !== selectedSet.set_id) {
+        q.question_id = 99;
+      }
+    });
 
     return res;
   }

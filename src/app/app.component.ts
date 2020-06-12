@@ -5,6 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ListenerService } from './services/listener.service';
 import { NotificationsService } from './services/notifications.service';
+import { Observable, Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +14,7 @@ import { NotificationsService } from './services/notifications.service';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -24,7 +27,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      if (this.platform.is('android') || this.platform.is('cordova')) {
+      if (this.platform.is('cordova')) {
         this.statusBar.styleDefault();
         this.splashScreen.hide();
         this.listenerService.startListening();

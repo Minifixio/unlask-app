@@ -11,4 +11,5 @@ export interface SimpleQuestion {
     question_id: number;
     question: string;
     answer: string;
+    set_id: number;
 }
