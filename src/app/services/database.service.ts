@@ -56,6 +56,16 @@ export class DatabaseService {
     await this.descreaseSetAmount(setId);
   }
 
+  async deleteSet(setId: number): Promise<void> {
+    const deleteQuestionsQuery = 'DELETE FROM questions WHERE set_id = ?';
+    const deleteAnswersQuery = 'DELETE FROM answers WHERE set_id = ?';
+    const deleteSetQuery = 'DELETE FROM sets WHERE set_id = ?';
+
+    await this.db.executeSql(deleteQuestionsQuery, [setId]);
+    await this.db.executeSql(deleteAnswersQuery, [setId]);
+    await this.db.executeSql(deleteSetQuery, [setId]);
+  }
+
   async editQuestion(setId: number, questionId: number, title: string): Promise<void> {
     const editQuery = 'UPDATE questions SET title = ? WHERE set_id = ? AND question_id = ?';
     await this.db.executeSql(editQuery, [title, setId, questionId]);
@@ -138,6 +148,13 @@ export class DatabaseService {
     return res.length;
   }
 
+  async getNextSetId(): Promise<number> {
+    const setIdQuery = 'SELECT * FROM sets ORDER BY set_id DESC LIMIT 1';
+    const res: QuestionSet[] = this.formatDatas<QuestionSet>(await this.db.executeSql(setIdQuery, []));
+
+    return res[0].set_id + 1;
+  }
+
   async getSetContent(setId: number): Promise<QuestionSet> {
     const questions = await this.getQuestions(setId);
     const answers = await this.getAnswers(setId);
@@ -156,6 +173,11 @@ export class DatabaseService {
   }
 
   async getRandomQuestions(): Promise<SimpleQuestion[]> {
+
+    if (!this.db) {
+      await this.initDB();
+    }
+
     const randomSetIdQuery = 'SELECT * FROM sets WHERE active = "true" ORDER BY RANDOM() LIMIT 1';
 
     const selectedSet: QuestionSet = this.formatDatas<QuestionSet>(await this.db.executeSql(randomSetIdQuery, []))[0];

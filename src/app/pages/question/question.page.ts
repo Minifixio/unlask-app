@@ -21,16 +21,18 @@ export class QuestionPage implements OnInit {
     private router: Router
   ) { }
 
-  ngOnInit() {
-    // this.testQuestions()
+  ngOnInit() { }
+
+  ionViewDidEnter() {
+    this.init();
+  }
+
+  init() {
     this.questions = this.dbService.getRandomQuestions();
     this.questions.then(res => {
       this.rightQuestionId = res[0].question_id;
       this.questionTitle = res[0].question;
     });
-  }
-
-  ionViewDidEnter() {
     this.animateRight();
     this.animateWrong();
   }

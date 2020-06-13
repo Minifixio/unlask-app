@@ -7,6 +7,7 @@ import { QuestionSet } from 'src/app/models/QuestionSet';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { ViewChildren, QueryList } from '@angular/core';
 import { StorageService } from 'src/app/services/storage.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-set-edition',
@@ -28,11 +29,10 @@ export class SetEditionPage implements OnInit {
   creation = false;
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private toastService: ToastsService,
-    private storageService: StorageService,
-    private dbService: DatabaseService
+    private dbService: DatabaseService,
+    private alertService: AlertService
   ) {
   }
 
@@ -55,7 +55,7 @@ export class SetEditionPage implements OnInit {
       } else {
         this.setMessage = 'Add a new set';
         this.creation = true;
-        this.dbService.getSetAmount().then(res => {
+        this.dbService.getNextSetId().then(res => {
           this.setId = res;
           const newQuestion: Question = {
             set_id: this.setId,
@@ -70,27 +70,8 @@ export class SetEditionPage implements OnInit {
           this.questions = [newQuestion];
           });
       }
-    } else { // To remove
-      this.setMessage = 'Add a new set';
-      this.creation = true;
-      this.setId = 0; // To remove
-
-      this.dbService.getSetAmount().then(num => {
-          this.setId = num;
-          console.log('new set');
-        });
-
-      const newQuestion: Question = {
-        set_id: this.setId,
-        question_id: 0,
-        title: '',
-        answer: {
-          set_id: this.setId,
-          question_id: 0,
-          content: ''
-        }
-      };
-      this.questions = [newQuestion];
+    } else {
+      this.router.navigateByUrl('/tabs/selection');
     }
   }
 
@@ -113,18 +94,18 @@ export class SetEditionPage implements OnInit {
       this.questions = this.mapQuestions(this.questionContainers);
       this.questions.forEach(question => {
         if ((question.title === '' && question.answer.content !== '') || (question.answer.content === '' && question.title !== '')) {
-          this.toastService.error(`Question n°${question.question_id} must be fulfilled`);
+          this.toastService.info(`Question n°${question.question_id} must be fulfilled`);
           return;
         }
       });
 
       if (this.questions.length < 2) {
-        this.toastService.error(`You must add at least 2 questions`);
+        this.toastService.info(`You must add at least 2 questions`);
         return;
       }
 
       if (!this.setTitle) {
-        this.toastService.error(`Please add a set name`);
+        this.toastService.info(`Please add a set name`);
         return;
       }
 
@@ -156,7 +137,7 @@ export class SetEditionPage implements OnInit {
             if (matchingQuestion.title !== question.title) {
               await this.dbService.editQuestion(this.setId, question.question_id, question.title);
             }
-  
+
             if (matchingQuestion.answer.content !== question.answer.content) {
               await this.dbService.editAnswer(this.setId, question.question_id, question.answer.content);
             }
@@ -213,4 +194,13 @@ export class SetEditionPage implements OnInit {
     return res;
   }
 
+  async deleteSet() {
+    const callback = async () => {
+      await this.dbService.deleteSet(this.setId);
+      this.router.navigateByUrl('/tabs/selection');
+      this.toastService.info('Set successfully deleted !');
+    };
+    // this.alertService.test()
+    await this.alertService.validation(`Delete set ${this.setTitle} ?`, 'Are you sure you want to delete this set ?', callback);
+  }
 }

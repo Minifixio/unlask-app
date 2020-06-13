@@ -7,6 +7,9 @@
     <ion-title>{{setMessage}}</ion-title>
 
     <ion-buttons slot="end">
+      <ion-button *ngIf="edition" (click)="deleteSet()">
+        <ion-icon name="trash-sharp"></ion-icon>
+      </ion-button>
       <ion-button (click)="validateInputs()">
         <ion-icon name="checkmark-sharp"></ion-icon>
       </ion-button>
