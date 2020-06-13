@@ -23,6 +23,7 @@ export class NotificationsService {
    async stickNotification() {
       const hasPermission = await this.localNotifications.hasPermission();
 
+      this.localNotifications.clearAll();
       if (hasPermission === false) {
         this.localNotifications.requestPermission();
       }
@@ -32,6 +33,7 @@ export class NotificationsService {
         title: 'Unlock app is running',
         sticky: true,
         foreground: true,
+        lockscreen: false,
         priority: -2
       });
   }

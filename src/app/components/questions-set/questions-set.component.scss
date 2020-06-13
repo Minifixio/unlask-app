@@ -11,7 +11,6 @@
     position: relative;
     //top: 2px;
     font-size: xx-large; 
-    margin-left: 20px;
 }
 
 .title-div {
@@ -23,7 +22,7 @@ ion-title {
     color: white;
     font-size: x-large;
     text-transform: uppercase;
-    padding-left: 5px;
+    padding: 2px;
     display: flex;
     flex-direction: column;
 }
@@ -41,9 +40,15 @@ ion-label {
 
 ion-toggle {
     position: relative;
-    top: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .title-text-div {
-    font-size: calc(12px + 2vw);
+    font-size: 4vw;
+    margin-bottom: 5px;
+}
+
+.title-label {
+    white-space: break-spaces;
 }

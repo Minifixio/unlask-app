@@ -95,8 +95,9 @@ export class DatabaseService {
   }
 
   async changeSetStatus(setId: number, status: boolean): Promise<void> {
-    const statusQuery = 'UPDATE sets SET status = ? WHERE set_id = ?';
-    await this.db.executeSql(statusQuery, [setId, status]);
+    console.log('changing set status for set ' + setId);
+    const statusQuery = 'UPDATE sets SET active = ? WHERE set_id = ?';
+    await this.db.executeSql(statusQuery, [status, setId]);
   }
 
   async increaseSetAmount(setId: number): Promise<void> {
@@ -182,7 +183,7 @@ export class DatabaseService {
 
     const selectedSet: QuestionSet = this.formatDatas<QuestionSet>(await this.db.executeSql(randomSetIdQuery, []))[0];
     // tslint:disable-next-line: max-line-length
-    const randomQuestionQuery = 'SELECT q.title as question, a.content as answer, q.question_id, q.set_id FROM questions q, answers a WHERE q.set_id = ? AND q.question_id = a.question_id ORDER BY RANDOM() LIMIT 4';
+    const randomQuestionQuery = 'SELECT q.title as question, a.content as answer, q.question_id, q.set_id FROM questions q, answers a WHERE q.set_id = ? AND q.question_id = a.question_id AND q.set_id = a.set_id ORDER BY RANDOM() LIMIT 4';
     // tslint:disable-next-line: max-line-length
     const res = this.formatDatas<SimpleQuestion>(await this.db.executeSql(randomQuestionQuery, [selectedSet.set_id]));
 

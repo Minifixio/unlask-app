@@ -11,7 +11,7 @@ declare var mayflower: any;
 })
 export class QuestionPage implements OnInit {
 
-  questions: Promise<SimpleQuestion[]>;
+  questions: SimpleQuestion[];
   // questions: SimpleQuestion[];
   rightQuestionId: number;
   questionTitle: string;
@@ -28,13 +28,19 @@ export class QuestionPage implements OnInit {
   }
 
   init() {
-    this.questions = this.dbService.getRandomQuestions();
-    this.questions.then(res => {
+    // this.questions = this.dbService.getRandomQuestions();
+    this.dbService.getRandomQuestions().then(res => {
+      this.questions = res;
+      console.log(res);
+      console.log();
       this.rightQuestionId = res[0].question_id;
       this.questionTitle = res[0].question;
+      setTimeout(() => {
+        document.getElementsByClassName('right-button');
+        this.animateRight();
+        this.animateWrong();
+      }, 1000);
     });
-    this.animateRight();
-    this.animateWrong();
   }
 
   select(id: number) {
@@ -42,13 +48,12 @@ export class QuestionPage implements OnInit {
       setTimeout(() => {
         mayflower.moveTaskToBack();
         this.router.navigateByUrl('/tabs/selection');
-      }, 2000);
+      }, 1000);
     }
   }
 
   animateRight() {
     const rightButton = document.getElementsByClassName('right-button')[0];
-
     console.log(rightButton);
     function toggleClass() {
       this.classList.toggle('active-r');
