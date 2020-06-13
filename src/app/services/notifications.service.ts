@@ -34,7 +34,8 @@ export class NotificationsService {
         sticky: true,
         foreground: true,
         lockscreen: false,
-        priority: -2
+        priority: -2,
+        led: false
       });
   }
 
