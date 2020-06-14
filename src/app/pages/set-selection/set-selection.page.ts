@@ -36,7 +36,6 @@ export class SetSelectionPage implements OnInit {
     if (this.platform.is('cordova')) {
       this.dbService.initDB().then(() => {
         this.questionSets = this.dbService.getSets();
-        console.log(this.questionSets);
       });
     } else {
       const res = new Promise<QuestionSet[]>((resolve) => {

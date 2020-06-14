@@ -20,18 +20,22 @@ export class DatabaseService {
   ) {}
 
   async initDB(): Promise<void> {
-    try {
-      await this.sqlite.echoTest();
-      await this.sqlite.selfTest();
-      this.db = await this.sqlite.create({name: 'sets', location: 'default'});
-      await this.db.open();
-      // tslint:disable-next-line: max-line-length
-      await this.db.executeSql('CREATE TABLE IF NOT EXISTS sets (set_id INTEGER PRIMARY KEY, title TEXT, amount INTEGER, active BOOLEAN)', []);
-      await this.db.executeSql('CREATE TABLE IF NOT EXISTS questions (set_id INTEGER, question_id INTEGER, title TEXT)', []);
-      await this.db.executeSql('CREATE TABLE IF NOT EXISTS answers (set_id INTEGER, question_id INTEGER, content TEXT)', []);
-    } catch (e) {
-      console.log(e);
-    }
+
+      if (!this.db || this.db.openDBs.sets !== 'OPEN') {
+        try {
+          await this.sqlite.echoTest();
+          await this.sqlite.selfTest();
+          this.db = await this.sqlite.create({name: 'sets', location: 'default'});
+          await this.db.open();
+          // tslint:disable-next-line: max-line-length
+          await this.db.executeSql('CREATE TABLE IF NOT EXISTS sets (set_id INTEGER PRIMARY KEY, title TEXT, amount INTEGER, active BOOLEAN)', []);
+          await this.db.executeSql('CREATE TABLE IF NOT EXISTS questions (set_id INTEGER, question_id INTEGER, title TEXT)', []);
+          await this.db.executeSql('CREATE TABLE IF NOT EXISTS answers (set_id INTEGER, question_id INTEGER, content TEXT)', []);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
   }
 
   async addQuestion(question: Question): Promise<void> {
@@ -153,7 +157,11 @@ export class DatabaseService {
     const setIdQuery = 'SELECT * FROM sets ORDER BY set_id DESC LIMIT 1';
     const res: QuestionSet[] = this.formatDatas<QuestionSet>(await this.db.executeSql(setIdQuery, []));
 
-    return res[0].set_id + 1;
+    if (res[0]) {
+      return res[0].set_id + 1;
+    } else {
+      return 0;
+    }
   }
 
   async getSetContent(setId: number): Promise<QuestionSet> {

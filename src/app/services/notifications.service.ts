@@ -21,11 +21,15 @@ export class NotificationsService {
   }
 
    async stickNotification() {
-      const hasPermission = await this.localNotifications.hasPermission();
+      let hasPermission = await this.localNotifications.hasPermission();
 
-      this.localNotifications.clearAll();
+      await this.localNotifications.clearAll();
       if (hasPermission === false) {
-        this.localNotifications.requestPermission();
+        hasPermission = await this.localNotifications.requestPermission();
+      }
+
+      if (!hasPermission) {
+        return;
       }
 
       this.localNotifications.schedule({

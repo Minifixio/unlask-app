@@ -25,14 +25,13 @@ export class AppComponent {
     this.initializeApp();
   }
 
-  initializeApp() {
-    this.platform.ready().then(() => {
-      if (this.platform.is('cordova')) {
-        this.statusBar.styleDefault();
-        this.splashScreen.hide();
-        this.listenerService.startListening();
-        this.notificationService.init();
-      }
-    });
+  async initializeApp() {
+    await this.platform.ready();
+    if (this.platform.is('cordova')) {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+      this.listenerService.startListening();
+      // this.notificationService.init();
+    }
   }
 }

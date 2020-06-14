@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from 'src/app/services/database.service';
 import { SimpleQuestion } from 'src/app/models/Question';
 import { Router } from '@angular/router';
+import { ListenerService } from 'src/app/services/listener.service';
 declare var mayflower: any;
 
 @Component({
@@ -18,28 +19,32 @@ export class QuestionPage implements OnInit {
 
   constructor(
     private dbService: DatabaseService,
-    private router: Router
+    private router: Router,
+    private listenerService: ListenerService
   ) { }
 
   ngOnInit() { }
 
   ionViewDidEnter() {
-    this.init();
+    console.log('Questions loaded');
+    setTimeout(() => { this.init(); }, 1000);
   }
 
   init() {
     // this.questions = this.dbService.getRandomQuestions();
-    this.dbService.getRandomQuestions().then(res => {
-      this.questions = res;
-      console.log(res);
-      console.log();
-      this.rightQuestionId = res[0].question_id;
-      this.questionTitle = res[0].question;
-      setTimeout(() => {
-        document.getElementsByClassName('right-button');
-        this.animateRight();
-        this.animateWrong();
-      }, 1000);
+    this.dbService.initDB().then(() => {
+      this.dbService.getRandomQuestions().then(res => {
+        this.questions = res;
+        console.log(res);
+        this.rightQuestionId = res[0].question_id;
+        this.questionTitle = res[0].question;
+        setTimeout(() => {
+          document.getElementsByClassName('right-button');
+          this.animateRight();
+          this.animateWrong();
+        }, 1000);
+        this.listenerService.startListening();
+      });
     });
   }
 
