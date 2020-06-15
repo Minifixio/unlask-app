@@ -17,12 +17,13 @@ declare var mayflower: any;
 export class ListenerService {
 
   listenTask: any;
+  private readyApp!: () => void;
+  private isAppInForeground: Promise<void> = Promise.resolve();
 
   constructor(
     public platform: Platform,
     private httpService: HttpService,
     private powerManagement: PowerManagement,
-    private dialogs: Dialogs,
     private router: Router,
   ) {}
 
@@ -34,7 +35,7 @@ export class ListenerService {
 
           this.listenTask = setInterval(() => {
             const date = new Date();
-            this.httpService.postEvent('Interval occured at ' + date.toUTCString());
+            // this.httpService.postEvent('Interval occured at ' + date.toUTCString());
             this.subUnlockEvent();
           }, 3000);
         },
@@ -46,12 +47,6 @@ export class ListenerService {
           startOnBoot: true
         }
       );
-
-      this.listenTask = setInterval(() => {
-        const date = new Date();
-        this.httpService.postEvent('Interval occured at ' + date.toUTCString());
-        this.subUnlockEvent();
-      }, 3000);
 
       this.powerManagement.acquire()
       .then(() => {
@@ -69,6 +64,15 @@ export class ListenerService {
       .catch(() => {
         console.log('Failed to set');
       });
+
+      this.platform.pause.subscribe(() => {
+        this.isAppInForeground = new Promise(resolve => { this.readyApp = resolve; });
+      });
+
+      this.platform.resume.subscribe(() => {
+        this.readyApp();
+      });
+
     }, 1000);
 
   }
@@ -78,8 +82,9 @@ export class ListenerService {
     cordova.plugins.ScreenEvents.listenerInit(async (event: string) => {
       window.plugins.bringtofront();
       await this.platform.ready();
+      await this.isAppInForeground;
       await this.router.navigateByUrl('/question');
-      await this.httpService.postEvent(event);
+      // await this.httpService.postEvent(event);
     });
   }
 }
