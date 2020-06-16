@@ -9,23 +9,67 @@ import { Answer } from '../models/Answer';
 })
 export class StorageService {
 
+  DEFAULT_NOTIFICATION_PREF = true;
+  DEFAULT_QUESTION_AMOUNT_PREF = 1;
+
+  notificationPref: boolean;
+  questionAmountPref: number;
+
   constructor(
     private nativeStorage: NativeStorage
   ) { }
 
   async getNotificationPref(): Promise<boolean> {
-   const pref = await this.nativeStorage.getItem('notification');
-   console.log('Notification pref:', pref);
-   if (!pref) {
-    await this.nativeStorage.setItem('notification', true);
-    return true;
-   } else {
-     return pref;
-   }
+    let pref: boolean;
+
+    if (this.notificationPref === undefined) {
+      try {
+        pref = await this.nativeStorage.getItem('notification');
+      } catch (e) {
+        console.log('No notifications pref');
+      }
+
+      console.log('Notification pref:', pref);
+      if (!pref) {
+       await this.nativeStorage.setItem('notification', this.DEFAULT_NOTIFICATION_PREF);
+       return true;
+      } else {
+        return pref;
+      }
+    } else {
+      return this.notificationPref;
+    }
+
   }
 
   async setNotificationPref(pref: boolean): Promise<void> {
     await this.nativeStorage.setItem('notification', pref);
+  }
+
+  async setQuestionAmountPref(pref: number): Promise<void> {
+    await this.nativeStorage.setItem('question_amount', pref);
+  }
+
+  async getQuestionAmountPref(): Promise<number> {
+    let pref: number;
+
+    if (this.questionAmountPref === undefined) {
+      try {
+        pref = await this.nativeStorage.getItem('question_amount');
+      } catch (e) {
+        console.log('No questions amount pref');
+      }
+
+      console.log('Questions amount:', pref);
+      if (!pref) {
+       await this.nativeStorage.setItem('question_amount', this.DEFAULT_QUESTION_AMOUNT_PREF);
+       return 1;
+      } else {
+        return pref;
+      }
+    } else {
+      return this.questionAmountPref;
+    }
   }
 
   getSetKey(setId: number): string {

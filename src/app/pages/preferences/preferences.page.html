@@ -12,7 +12,7 @@
   </ion-item-divider>
   <ion-item>
     <ion-label>Show notifications</ion-label>
-    <ion-toggle (ionChange)="notificationPref($event)" slot="end" checked></ion-toggle>
+    <ion-toggle (ionChange)="notificationPref($event)" slot="end" [checked]="notificationActive"></ion-toggle>
   </ion-item>
 
   <ion-item-divider>
@@ -20,8 +20,15 @@
       Questions
     </ion-label>
   </ion-item-divider>
+
   <ion-item>
-    <ion-label>Randomize</ion-label>
-    <ion-toggle slot="end" checked></ion-toggle>
+    <ion-label>Number of questions asked</ion-label>
+    <ion-select (ionChange)="questionAmountPref($event)" [value]="questionsAmount" interface="popover">
+      <ion-select-option value="01">1</ion-select-option>
+      <ion-select-option value="02">2</ion-select-option>
+      <ion-select-option value="03">3</ion-select-option>
+      <ion-select-option value="04">4</ion-select-option>
+      <ion-select-option value="05">5</ion-select-option>
+    </ion-select>
   </ion-item>
 </ion-content>
