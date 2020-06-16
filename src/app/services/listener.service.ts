@@ -34,7 +34,7 @@ export class ListenerService {
           console.log('[BackgroundFetch] taskId: ', taskId);
 
           this.listenTask = setInterval(() => {
-            const date = new Date();
+            // const date = new Date();
             // this.httpService.postEvent('Interval occured at ' + date.toUTCString());
             this.subUnlockEvent();
           }, 3000);
@@ -73,8 +73,7 @@ export class ListenerService {
         this.readyApp();
       });
 
-    }, 1000);
-
+    }, 500);
   }
 
   async subUnlockEvent() {

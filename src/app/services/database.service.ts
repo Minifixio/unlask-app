@@ -20,7 +20,6 @@ export class DatabaseService {
   ) {}
 
   async initDB(): Promise<void> {
-
       if (!this.db || this.db.openDBs.sets !== 'OPEN') {
         try {
           await this.sqlite.echoTest();
@@ -124,8 +123,12 @@ export class DatabaseService {
 
   async getSets(): Promise<QuestionSet[]> {
     const getQuery = 'SELECT * FROM sets';
-    const res: QuestionSet[] = this.formatDatas<QuestionSet>(await this.db.executeSql(getQuery, []));
-
+    let res: QuestionSet[] = [];
+    try {
+      res = this.formatDatas<QuestionSet>(await this.db.executeSql(getQuery, []));
+    } catch(e) {
+      return res;
+    }
     console.log(res);
     return res;
   }
@@ -190,19 +193,24 @@ export class DatabaseService {
     const randomSetIdQuery = 'SELECT * FROM sets WHERE active = "true" ORDER BY RANDOM() LIMIT 1';
 
     const selectedSet: QuestionSet = this.formatDatas<QuestionSet>(await this.db.executeSql(randomSetIdQuery, []))[0];
-    // tslint:disable-next-line: max-line-length
-    const randomQuestionQuery = 'SELECT q.title as question, a.content as answer, q.question_id, q.set_id FROM questions q, answers a WHERE q.set_id = ? AND q.question_id = a.question_id AND q.set_id = a.set_id ORDER BY RANDOM() LIMIT 4';
-    // tslint:disable-next-line: max-line-length
-    const res = this.formatDatas<SimpleQuestion>(await this.db.executeSql(randomQuestionQuery, [selectedSet.set_id]));
 
-    // In order to make sure questions from other sets with same question_id don't match the right answer
-    res.map(q => {
-      if (q.set_id !== selectedSet.set_id) {
-        q.question_id = 99;
-      }
-    });
+    if (!selectedSet) {
+      return [];
+    } else {
+      // tslint:disable-next-line: max-line-length
+      const randomQuestionQuery = 'SELECT q.title as question, a.content as answer, q.question_id, q.set_id FROM questions q, answers a WHERE q.set_id = ? AND q.question_id = a.question_id AND q.set_id = a.set_id ORDER BY RANDOM() LIMIT 4';
+      // tslint:disable-next-line: max-line-length
+      const res = this.formatDatas<SimpleQuestion>(await this.db.executeSql(randomQuestionQuery, [selectedSet.set_id]));
 
-    return res;
+      // In order to make sure questions from other sets with same question_id don't match the right answer
+      res.map(q => {
+        if (q.set_id !== selectedSet.set_id) {
+          q.question_id = 99;
+        }
+      });
+
+      return res;
+    }
   }
 
   async clearDb() {

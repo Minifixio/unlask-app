@@ -14,13 +14,13 @@
 
 <ion-content>
 
-  <div *ngIf="(questionSets | async)?.length == 0 " class="empty-div">
+  <div *ngIf="questionSets.length == 0 " class="empty-div">
     <ion-title class="empty-label">
       Wow such empty...
     </ion-title>
   </div>
 
-  <div *ngFor="let set of questionSets | async">
+  <div *ngFor="let set of questionSets">
     <app-questions-set [active]="set.active" [title]="set.title" [amount]="set.amount" [setId]="set.set_id" (editSet)="editSet($event)"></app-questions-set>
   </div>
 

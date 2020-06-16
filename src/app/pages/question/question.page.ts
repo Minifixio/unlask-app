@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from 'src/app/services/database.service';
 import { SimpleQuestion } from 'src/app/models/Question';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { ListenerService } from 'src/app/services/listener.service';
 declare var mayflower: any;
 
@@ -27,7 +27,7 @@ export class QuestionPage implements OnInit {
 
   ionViewDidEnter() {
     console.log('Questions loaded');
-    setTimeout(() => { this.init(); }, 1000);
+    setTimeout(() => { this.init(); }, 500);
   }
 
   init() {
@@ -36,16 +36,32 @@ export class QuestionPage implements OnInit {
       this.dbService.getRandomQuestions().then(res => {
         this.questions = res;
         console.log(res);
-        this.rightQuestionId = res[0].question_id;
-        this.questionTitle = res[0].question;
-        setTimeout(() => {
-          document.getElementsByClassName('right-button');
-          this.animateRight();
-          this.animateWrong();
-        }, 1000);
-        this.listenerService.startListening();
+
+        if (this.questions.length > 0) {
+          this.rightQuestionId = res[0].question_id;
+          this.questionTitle = res[0].question;
+          this.listenerService.startListening();
+
+          const animationInterval = setInterval(() => {
+            if (document.getElementsByClassName('right-button')[0]) {
+              this.animateRight();
+              this.animateWrong();
+              clearInterval(animationInterval);
+            }
+          }, 100);
+        }
+
       });
     });
+  }
+
+  newSet() {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        set: null
+      }
+    };
+    this.router.navigate(['set-edition'], navigationExtras);
   }
 
   select(id: number) {

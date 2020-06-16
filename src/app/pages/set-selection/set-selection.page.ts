@@ -14,7 +14,7 @@ import { TabsPage } from 'src/app/tabs/tabs.page';
 })
 export class SetSelectionPage implements OnInit {
 
-  questionSets: Promise<QuestionSet[]>;
+  questionSets: QuestionSet[];
 
   constructor(
     private platform: Platform,
@@ -25,6 +25,7 @@ export class SetSelectionPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.questionSets = [];
     this.tabsPage.pageChange.subscribe((route) => { if (route === '/tabs/selection') { this.refresh(); }});
   }
 
@@ -35,23 +36,48 @@ export class SetSelectionPage implements OnInit {
   refresh() {
     if (this.platform.is('cordova')) {
       this.dbService.initDB().then(() => {
-        this.questionSets = this.dbService.getSets();
+        this.dbService.getSets().then(sets => {
+          if (!this.compareSets(this.questionSets, sets)) {
+            this.questionSets = sets;
+          }
+        });
       });
     } else {
-      const res = new Promise<QuestionSet[]>((resolve) => {
-        const response: QuestionSet[] = [
-            {
-              set_id: 1,
-              active: true,
-              title: 'jlnfaifn aiufai ufamhfaifj afajfamiohfa',
-              questions: [],
-              amount: 4
-            }
-          ];
-        resolve(response);
-        });
-      this.questionSets = res;
+      const questions: QuestionSet[] = [
+        {
+          set_id: 1,
+          active: true,
+          title: 'jlnfaifn aiufai ufamhfaifj afajfamiohfa',
+          questions: [],
+          amount: 4
+        }
+      ];
+      this.questionSets = questions;
     }
+  }
+
+  compareSets(arr1: QuestionSet[], arr2: QuestionSet[]) {
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < arr1.length; i ++) {
+      if (arr1[i].active !== arr2[i].active) {
+        return false;
+      }
+      if (arr1[i].title !== arr2[i].title) {
+        return false;
+      }
+      if (arr1[i].set_id !== arr2[i].set_id) {
+        return false;
+      }
+      if (arr1[i].amount !== arr2[i].amount) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   newSet() {
