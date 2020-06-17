@@ -78,7 +78,7 @@ export class QuestionPage implements OnInit {
     if (id === this.rightQuestionId) {
       this.questionsCount += 1;
 
-      if (this.questionsAmount === this.questionsCount) {
+      if (this.questionsAmount + 1 === this.questionsCount) {
         this.finish();
       } else {
 

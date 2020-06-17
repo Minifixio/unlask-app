@@ -17,9 +17,11 @@ export class QuestionContainerComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.questionInput.setFocus();
-    }, 500);
+    if (this.question === '' && this.answer === '') {
+      setTimeout(() => {
+        this.questionInput.setFocus();
+      }, 500);
+    }
   }
 
 }

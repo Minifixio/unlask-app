@@ -200,7 +200,6 @@ export class SetEditionPage implements OnInit {
       this.router.navigateByUrl('/tabs/selection');
       this.toastService.info('Set successfully deleted !');
     };
-    // this.alertService.test()
     await this.alertService.validation(`Delete set ${this.setTitle} ?`, 'Are you sure you want to delete this set ?', callback);
   }
 }

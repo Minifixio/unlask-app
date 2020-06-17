@@ -47,6 +47,7 @@ export class StorageService {
   }
 
   async setQuestionAmountPref(pref: number): Promise<void> {
+    this.questionAmountPref = pref;
     await this.nativeStorage.setItem('question_amount', pref);
   }
 
