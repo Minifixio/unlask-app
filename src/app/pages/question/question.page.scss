@@ -11,7 +11,9 @@
 .answers-solo-div {
     height: 100%;
     text-align: center;
-    width: auto;
+	width: auto;
+	display: flex;
+    justify-content: center;
 }
 
 .count-label {
@@ -76,7 +78,7 @@ $lg: new-breakpoint(min-width 1024px);
 .right-button {
     white-space: break-spaces;
     margin: 10px;
-    font-size: x-large;
+    font-size: 24px;
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -111,7 +113,7 @@ $lg: new-breakpoint(min-width 1024px);
 	
 	span {
 		
-		i {
+		ion-icon {
 			transform-origin: center center;
 		}
 
@@ -131,7 +133,9 @@ $lg: new-breakpoint(min-width 1024px);
     }
     
     .submit {
-        display: none;
+        text-indent: 100%;
+		white-space: nowrap;
+		overflow: hidden;
     }
 
 	span {
@@ -151,7 +155,7 @@ $lg: new-breakpoint(min-width 1024px);
 	background-color: lighten($color-right,10%);
 	
 	.submit {
-		display: none; 
+		display: none;
 	}
 	
 	.loading {
@@ -163,7 +167,7 @@ $lg: new-breakpoint(min-width 1024px);
 		font-size: 24px;
 		animation: scale 0.5s linear;
 		
-		i {
+		ion-icon {
 			transform-origin: center center;
 		}
 	}
@@ -173,7 +177,7 @@ $lg: new-breakpoint(min-width 1024px);
 .wrong-button {
     white-space: break-spaces;
     margin: 10px;
-    font-size: x-large;
+    font-size: 24px;
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -208,7 +212,7 @@ $lg: new-breakpoint(min-width 1024px);
 	
 	span {
 		
-		i {
+		ion-icon {
 			transform-origin: center center;
 		}
 
@@ -228,7 +232,9 @@ $lg: new-breakpoint(min-width 1024px);
     }
     
     .submit {
-        display: none;
+        text-indent: 100%;
+		white-space: nowrap;
+		overflow: hidden;
     }
 
 	span {
@@ -248,7 +254,7 @@ $lg: new-breakpoint(min-width 1024px);
 	background-color: lighten($color-wrong,10%);
 	
 	.submit {
-		display: none; 
+		display: none;
 	}
 	
 	.loading {
@@ -260,7 +266,7 @@ $lg: new-breakpoint(min-width 1024px);
 		font-size: 24px;
 		animation: scale 0.5s linear;
 		
-		i {
+		ion-icon {
 			transform-origin: center center;
 		}
 	}

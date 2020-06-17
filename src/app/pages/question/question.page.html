@@ -22,7 +22,7 @@
     </ion-button>
   </div>
 
-  <ion-label *ngIf="questions && questions.length > 0" class="count-label">
+  <ion-label *ngIf="questions && questions.length > 0 && !loading" class="count-label">
     {{questionsCount}} out of {{questionsAmount}}
   </ion-label>
 </ion-content>

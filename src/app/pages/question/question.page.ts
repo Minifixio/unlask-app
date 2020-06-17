@@ -32,7 +32,8 @@ export class QuestionPage implements OnInit {
   ionViewDidEnter() {
     console.log('Questions loaded');
     this.loading = true;
-    setTimeout(() => { this.init(); }, 500);
+    // setTimeout(() => { this.init(); }, 500);
+    this.testQuestions();
   }
 
   init() {
@@ -158,32 +159,46 @@ export class QuestionPage implements OnInit {
 
   }
 
-  // testQuestions() {
-  //   this.questions = [
-  //     {
-  //       question_id: 0,
-  //       question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
-  //       answer: 'He bien écoute tu devrais essayer d\'y réfléchir plus en profondeur'
-  //     },
-  //     {
-  //       question_id: 1,
-  //       question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
-  //       answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet scelerisque justo'
-  //     },
-  //     {
-  //       question_id: 2,
-  //       question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
-  //       answer: 'Le Saint Graal'
-  //     },
-  //     {
-  //       question_id: 3,
-  //       question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
-  //       answer: '2'
-  //     }
-  //   ];
+  testQuestions() {
+    this.loading = false;
 
-  //   this.questionTitle = this.questions[0].question;
-  //   this.rightQuestionId =  this.questions[0].question_id;
-  // }
+    this.questions = [
+      {
+        set_id: 1,
+        question_id: 0,
+        question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
+        answer: 'He bien écoute tu devrais essayer d\'y réfléchir plus en profondeur'
+      },
+      {
+        set_id: 1,
+        question_id: 1,
+        question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
+        answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet scelerisque justo'
+      },
+      {
+        set_id: 1,
+        question_id: 2,
+        question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
+        answer: 'Le Saint Graal'
+      },
+      {
+        set_id: 1,
+        question_id: 3,
+        question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
+        answer: '2'
+      }
+    ];
+
+    this.questionTitle = this.questions[0].question;
+    this.rightQuestionId =  this.questions[0].question_id;
+
+    const animationInterval = setInterval(() => {
+      if (document.getElementsByClassName('right-button')[0]) {
+        this.animateRight();
+        this.animateWrong();
+        clearInterval(animationInterval);
+      }
+    }, 100);
+  }
 
 }
