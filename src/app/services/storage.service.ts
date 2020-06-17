@@ -30,7 +30,7 @@ export class StorageService {
       }
 
       console.log('Notification pref:', pref);
-      if (!pref) {
+      if (pref === undefined) {
        await this.nativeStorage.setItem('notification', this.DEFAULT_NOTIFICATION_PREF);
        return true;
       } else {
@@ -44,6 +44,7 @@ export class StorageService {
 
   async setNotificationPref(pref: boolean): Promise<void> {
     await this.nativeStorage.setItem('notification', pref);
+    console.log(await this.nativeStorage.getItem('notification'))
   }
 
   async setQuestionAmountPref(pref: number): Promise<void> {

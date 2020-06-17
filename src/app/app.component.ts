@@ -31,7 +31,7 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.listenerService.startListening();
-      // this.notificationService.init();
+      this.notificationService.init();
     }
   }
 }

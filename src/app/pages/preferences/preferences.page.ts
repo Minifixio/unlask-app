@@ -33,7 +33,7 @@ export class PreferencesPage implements OnInit {
 
   async questionAmountPref(event: CustomEvent) {
     this.questionsAmount = event.detail.value;
-    await this.storageService.setQuestionAmountPref(event.detail.value);
+    await this.storageService.setQuestionAmountPref(Number(event.detail.value));
   }
 
 }

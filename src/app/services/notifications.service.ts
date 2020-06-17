@@ -16,7 +16,11 @@ export class NotificationsService {
     const activated = await this.storageService.getNotificationPref();
 
     if (activated) {
-      await this.stickNotification();
+      try {
+        await this.stickNotification();
+      } catch (e) {
+        console.log('error while setting notification');
+      }
     }
   }
 
@@ -34,7 +38,8 @@ export class NotificationsService {
 
       this.localNotifications.schedule({
         id: 1,
-        title: 'Unlock app is running',
+        title: 'Unlask app is running',
+        smallIcon: 'res://transparent_icon',
         sticky: true,
         foreground: true,
         lockscreen: false,
