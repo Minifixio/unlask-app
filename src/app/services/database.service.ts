@@ -156,6 +156,12 @@ export class DatabaseService {
     return res.length;
   }
 
+  async getQuestionsAmount(): Promise<number> {
+    const getQuery =  'SELECT * FROM questions';
+    const res = this.formatDatas<Question>(await this.db.executeSql(getQuery, []));
+    return res.length;
+  }
+
   async getNextSetId(): Promise<number> {
     const setIdQuery = 'SELECT * FROM sets ORDER BY set_id DESC LIMIT 1';
     const res: QuestionSet[] = this.formatDatas<QuestionSet>(await this.db.executeSql(setIdQuery, []));

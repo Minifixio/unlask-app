@@ -55,7 +55,7 @@ export class StorageService {
 
     if (this.questionAmountPref === undefined) {
       try {
-        pref = await this.nativeStorage.getItem('question_amount');
+        pref = Number(await this.nativeStorage.getItem('question_amount'));
       } catch (e) {
         console.log('No questions amount pref');
       }
@@ -65,6 +65,7 @@ export class StorageService {
        await this.nativeStorage.setItem('question_amount', this.DEFAULT_QUESTION_AMOUNT_PREF);
        return 1;
       } else {
+        this.questionAmountPref = pref;
         return pref;
       }
     } else {

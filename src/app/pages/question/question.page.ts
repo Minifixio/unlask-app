@@ -3,6 +3,7 @@ import { DatabaseService } from 'src/app/services/database.service';
 import { SimpleQuestion } from 'src/app/models/Question';
 import { Router, NavigationExtras } from '@angular/router';
 import { ListenerService } from 'src/app/services/listener.service';
+import { StorageService } from 'src/app/services/storage.service';
 declare var mayflower: any;
 
 @Component({
@@ -13,31 +14,40 @@ declare var mayflower: any;
 export class QuestionPage implements OnInit {
 
   questions: SimpleQuestion[];
-  // questions: SimpleQuestion[];
   rightQuestionId: number;
   questionTitle: string;
+  questionsAmount: number;
+  questionsCount: number;
+  loading: boolean;
 
   constructor(
     private dbService: DatabaseService,
     private router: Router,
-    private listenerService: ListenerService
+    private listenerService: ListenerService,
+    private storageService: StorageService
   ) { }
 
   ngOnInit() { }
 
   ionViewDidEnter() {
     console.log('Questions loaded');
+    this.loading = true;
     setTimeout(() => { this.init(); }, 500);
   }
 
   init() {
-    // this.questions = this.dbService.getRandomQuestions();
+    this.storageService.getQuestionAmountPref().then(res => {
+      this.questionsAmount = res;
+      this.questionsCount = 1;
+    });
+
     this.dbService.initDB().then(() => {
       this.dbService.getRandomQuestions().then(res => {
         this.questions = res;
         console.log(res);
 
         if (this.questions.length > 0) {
+          this.loading = false;
           this.rightQuestionId = res[0].question_id;
           this.questionTitle = res[0].question;
           this.listenerService.startListening();
@@ -64,13 +74,51 @@ export class QuestionPage implements OnInit {
     this.router.navigate(['set-edition'], navigationExtras);
   }
 
-  select(id: number) {
+  async select(id: number) {
     if (id === this.rightQuestionId) {
-      setTimeout(() => {
-        mayflower.moveTaskToBack();
-        this.router.navigateByUrl('/tabs/selection');
-      }, 1000);
+      this.questionsCount += 1;
+
+      if (this.questionsAmount === this.questionsCount) {
+        this.finish();
+      } else {
+
+        // Set a timeout to wait for the animation to end
+        setTimeout(async () => {
+
+          this.loading = true;
+          const questionsCount = await this.dbService.getQuestionsAmount();
+          let trials = 0;
+          let nextQuestions: SimpleQuestion[];
+          do {
+            nextQuestions = await this.dbService.getRandomQuestions();
+            trials += 1;
+
+            if (trials > 10 && questionsCount < this.questionsAmount) {
+              this.finish();
+              break;
+            }
+          } while (nextQuestions[0].question === this.questionTitle);
+
+          this.loading = false;
+          this.rightQuestionId = nextQuestions[0].question_id;
+          this.questionTitle = nextQuestions[0].question;
+          const animationInterval = setInterval(() => {
+            if (document.getElementsByClassName('right-button')[0]) {
+              this.animateRight();
+              this.animateWrong();
+              clearInterval(animationInterval);
+            }
+          }, 100);
+        }, 1000);
+      }
     }
+  }
+
+  finish() {
+    setTimeout(() => {
+      mayflower.moveTaskToBack();
+      this.router.navigateByUrl('/tabs/selection');
+    }, 1000);
   }
 
   animateRight() {

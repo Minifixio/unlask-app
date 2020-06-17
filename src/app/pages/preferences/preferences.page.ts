@@ -18,7 +18,6 @@ export class PreferencesPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('init Preferences')
     this.storageService.getNotificationPref().then(res => this.notificationActive = res);
     this.storageService.getQuestionAmountPref().then(res => this.questionsAmount = String(res).padStart(2, '0'));
   }
