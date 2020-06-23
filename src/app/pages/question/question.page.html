@@ -6,7 +6,6 @@
     <div *ngFor="let question of questions" class="answers-solo-div">
       <button (click)="select(question.question_id)" [class]="question.question_id == rightQuestionId ? 'right-button': 'wrong-button'">
         <span class="submit">{{question.answer}}</span>
-        <span></span>
         <span class="check"><ion-icon [name]="question.question_id == rightQuestionId ? 'checkmark-sharp': 'close'"></ion-icon></span>
       </button>
     </div>
