@@ -32,8 +32,8 @@ export class QuestionPage implements OnInit {
   ionViewDidEnter() {
     console.log('Questions loaded');
     this.loading = true;
-    // setTimeout(() => { this.init(); }, 500);
-    this.testQuestions();
+    setTimeout(() => { this.init(); }, 500);
+    // this.testQuestions();
   }
 
   init() {

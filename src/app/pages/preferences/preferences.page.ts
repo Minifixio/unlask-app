@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationsService } from 'src/app/services/notifications.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { ListenerService } from 'src/app/services/listener.service';
 
 @Component({
   selector: 'app-preferences',
@@ -11,10 +12,12 @@ export class PreferencesPage implements OnInit {
 
   notificationActive = true;
   questionsAmount = '01';
+  appEnabled = true;
 
   constructor(
     private notificationService: NotificationsService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private listenerService: ListenerService
   ) { }
 
   ngOnInit() {
@@ -36,4 +39,14 @@ export class PreferencesPage implements OnInit {
     await this.storageService.setQuestionAmountPref(Number(event.detail.value));
   }
 
+  async enabledPref(event: CustomEvent) {
+    this.appEnabled = event.detail.checked;
+    if (event.detail.checked) {
+      await this.storageService.setEnabledPref(true);
+      this.listenerService.startListening();
+    } else {
+      await this.storageService.setEnabledPref(false);
+      this.listenerService.stopListening();
+    }
+  }
 }

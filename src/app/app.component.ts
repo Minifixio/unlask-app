@@ -7,6 +7,8 @@ import { ListenerService } from './services/listener.service';
 import { NotificationsService } from './services/notifications.service';
 import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { StorageService } from './services/storage.service';
+declare var window: any;
 
 @Component({
   selector: 'app-root',
@@ -20,6 +22,7 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private listenerService: ListenerService,
+    private storageService: StorageService,
     private notificationService: NotificationsService
   ) {
     this.initializeApp();
@@ -30,8 +33,13 @@ export class AppComponent {
     if (this.platform.is('cordova')) {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.listenerService.startListening();
       this.notificationService.init();
+
+      const appEnabled = await this.storageService.getEnabledPref();
+
+      if (appEnabled) {
+        this.listenerService.startListening();
+      }
     }
   }
 }

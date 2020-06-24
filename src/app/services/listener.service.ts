@@ -6,6 +6,7 @@ import { HttpService } from './http.service';
 import { Router } from '@angular/router';
 import { AppComponent } from '../app.component';
 import BackgroundFetch from 'cordova-plugin-background-fetch';
+import { StorageService } from './storage.service';
 
 declare var cordova: any;
 declare var window: any;
@@ -85,5 +86,9 @@ export class ListenerService {
       await this.router.navigateByUrl('/question');
       // await this.httpService.postEvent(event);
     });
+  }
+
+  stopListening() {
+    clearInterval(this.listenTask);
   }
 }

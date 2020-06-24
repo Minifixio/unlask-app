@@ -10,10 +10,12 @@ import { Answer } from '../models/Answer';
 export class StorageService {
 
   DEFAULT_NOTIFICATION_PREF = true;
+  DEFAULT_APP_ENABLED_PREF = true;
   DEFAULT_QUESTION_AMOUNT_PREF = 1;
 
   notificationPref: boolean;
   questionAmountPref: number;
+  appEnabledPref: boolean;
 
   constructor(
     private nativeStorage: NativeStorage
@@ -44,7 +46,35 @@ export class StorageService {
 
   async setNotificationPref(pref: boolean): Promise<void> {
     await this.nativeStorage.setItem('notification', pref);
-    console.log(await this.nativeStorage.getItem('notification'))
+    console.log(await this.nativeStorage.getItem('notification'));
+  }
+
+  async getEnabledPref(): Promise<boolean> {
+    let pref: boolean;
+
+    if (this.appEnabledPref === undefined) {
+      try {
+        pref = await this.nativeStorage.getItem('enabled');
+      } catch (e) {
+        console.log('No app enabled pref');
+      }
+
+      console.log('App enabled pref:', pref);
+      if (pref === undefined) {
+       await this.nativeStorage.setItem('enabled', this.DEFAULT_APP_ENABLED_PREF);
+       return true;
+      } else {
+        return pref;
+      }
+    } else {
+      return this.appEnabledPref;
+    }
+
+  }
+
+  async setEnabledPref(pref: boolean): Promise<void> {
+    await this.nativeStorage.setItem('enabled', pref);
+    console.log(await this.nativeStorage.getItem('enabled'));
   }
 
   async setQuestionAmountPref(pref: number): Promise<void> {
@@ -74,6 +104,8 @@ export class StorageService {
       return this.questionAmountPref;
     }
   }
+
+
 
   getSetKey(setId: number): string {
     return `question-set-${setId}`;

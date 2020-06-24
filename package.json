@@ -43,6 +43,7 @@
     "cordova-plugin-local-notification": "^0.9.0-beta.2",
     "cordova-plugin-lock-info": "0.0.2",
     "cordova-plugin-nativestorage": "^2.3.2",
+    "cordova-plugin-ondestroy": "^1.0.2",
     "cordova-plugin-powermanagement-orig": "git+https://github.com/boltex/cordova-plugin-powermanagement.git",
     "cordova-plugin-screenevents": "^1.0.1",
     "cordova-sqlite-storage": "^5.0.0",
@@ -103,7 +104,8 @@
       "cordova-android-movetasktoback": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-nativestorage": {},
-      "cordova-plugin-background-fetch": {}
+      "cordova-plugin-background-fetch": {},
+      "cordova-plugin-ondestroy": {}
     },
     "platforms": [
       "android"

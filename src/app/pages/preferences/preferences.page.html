@@ -7,9 +7,21 @@
 <ion-content>
   <ion-item-divider>
     <ion-label>
+      General
+    </ion-label>
+  </ion-item-divider>
+  
+  <ion-item>
+    <ion-label>App enabled</ion-label>
+    <ion-toggle (ionChange)="enabledPref($event)" slot="end" [checked]="appEnabled"></ion-toggle>
+  </ion-item>
+
+  <ion-item-divider>
+    <ion-label>
       Notifications
     </ion-label>
   </ion-item-divider>
+
   <ion-item>
     <ion-label>Show notification</ion-label>
     <ion-toggle (ionChange)="notificationPref($event)" slot="end" [checked]="notificationActive"></ion-toggle>
