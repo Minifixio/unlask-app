@@ -19,6 +19,7 @@ export class QuestionPage implements OnInit {
   questionsAmount: number;
   questionsCount: number;
   loading: boolean;
+  animationLoading: boolean;
 
   constructor(
     private dbService: DatabaseService,
@@ -57,6 +58,7 @@ export class QuestionPage implements OnInit {
             if (document.getElementsByClassName('right-button')[0]) {
               this.animateRight();
               this.animateWrong();
+              this.animationLoading = false;
               clearInterval(animationInterval);
             }
           }, 100);
@@ -76,6 +78,7 @@ export class QuestionPage implements OnInit {
   }
 
   async select(id: number) {
+    this.animationLoading = true;
     if (id === this.rightQuestionId) {
       this.questionsCount += 1;
 
@@ -93,6 +96,7 @@ export class QuestionPage implements OnInit {
           do {
             nextQuestions = await this.dbService.getRandomQuestions();
             trials += 1;
+            console.log(nextQuestions);
 
             if (trials > 10 && questionsCount < this.questionsAmount) {
               this.finish();
@@ -101,12 +105,14 @@ export class QuestionPage implements OnInit {
           } while (nextQuestions[0].question === this.questionTitle);
 
           this.loading = false;
+          this.questions = nextQuestions;
           this.rightQuestionId = nextQuestions[0].question_id;
           this.questionTitle = nextQuestions[0].question;
           const animationInterval = setInterval(() => {
             if (document.getElementsByClassName('right-button')[0]) {
               this.animateRight();
               this.animateWrong();
+              this.animationLoading = false;
               clearInterval(animationInterval);
             }
           }, 100);

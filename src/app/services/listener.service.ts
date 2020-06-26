@@ -29,6 +29,7 @@ export class ListenerService {
   ) {}
 
   startListening() {
+    console.log('Start listening');
     setTimeout(() => {
       BackgroundFetch.configure(
         async (taskId) => {
