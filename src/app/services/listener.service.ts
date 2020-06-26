@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { PowerManagement } from '@ionic-native/power-management/ngx';
-import { Dialogs } from '@ionic-native/dialogs/ngx';
 import { HttpService } from './http.service';
 import { Router } from '@angular/router';
-import { AppComponent } from '../app.component';
 import BackgroundFetch from 'cordova-plugin-background-fetch';
 import { StorageService } from './storage.service';
 
@@ -90,6 +88,7 @@ export class ListenerService {
   }
 
   stopListening() {
+    BackgroundFetch.stop();
     clearInterval(this.listenTask);
   }
 }
