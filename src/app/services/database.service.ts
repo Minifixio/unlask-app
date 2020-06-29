@@ -22,8 +22,8 @@ export class DatabaseService {
   async initDB(): Promise<void> {
       if (!this.db || this.db.openDBs.sets !== 'OPEN') {
         try {
-          await this.sqlite.echoTest();
-          await this.sqlite.selfTest();
+          // await this.sqlite.echoTest();
+          // await this.sqlite.selfTest();
           this.db = await this.sqlite.create({name: 'sets', location: 'default'});
           await this.db.open();
           // tslint:disable-next-line: max-line-length
@@ -70,11 +70,13 @@ export class DatabaseService {
   }
 
   async editQuestion(setId: number, questionId: number, title: string): Promise<void> {
+    console.log('editing question : new title ' + title);
     const editQuery = 'UPDATE questions SET title = ? WHERE set_id = ? AND question_id = ?';
     await this.db.executeSql(editQuery, [title, setId, questionId]);
   }
 
   async editAnswer(setId: number, questionId: number, content: string): Promise<void> {
+    console.log('editing answer : new title ' + content);
     const editQuery = 'UPDATE answers SET content = ? WHERE set_id = ? AND question_id = ?';
     await this.db.executeSql(editQuery, [content, setId, questionId]);
   }

@@ -24,7 +24,7 @@
 
   <ion-list>
     <ion-list-header class="set-name-card">
-        <ion-input [(ngModel)]="setTitle" type="text" [value]="setTitle" maxlength=30 placeHolder="Set name..."></ion-input>
+        <ion-input [(ngModel)]="setTitle" type="text" [value]="setTitle" maxlength=35 placeHolder="Set name..."></ion-input>
     </ion-list-header>
 
     <ion-item-sliding *ngFor="let question of questions">
@@ -32,7 +32,7 @@
         <app-question-container #questionContainer class="question-container" [questionId]="question.question_id" [question]="question.title" [answer]="question.answer.content"></app-question-container>
       </ion-item>
       <ion-item-options side="end">
-        <ion-item-option (click)="delete(question.question_id)">
+        <ion-item-option (click)="deleteQuestion(question.question_id)">
           <ion-icon name="trash"></ion-icon>
         </ion-item-option>
       </ion-item-options>

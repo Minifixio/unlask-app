@@ -23,6 +23,7 @@ export class SetEditionPage implements OnInit {
   setMessage: string;
   questionSet: QuestionSet;
   questions: Question[];
+  originalQuestions: Question[];
   setTitle: string;
   initialTitle: string;
   edition = false;
@@ -40,18 +41,21 @@ export class SetEditionPage implements OnInit {
 
     if (this.router.getCurrentNavigation().extras.state) {
       const setParam = this.router.getCurrentNavigation().extras.state.set;
-
+      console.log(setParam);
       if (setParam !== null) {
         console.log('edit set');
         this.setMessage = 'Edit a set';
         this.edition = true;
         this.setId = setParam;
+
         this.dbService.getSetContent(this.setId).then(setContent => {
           this.questionSet = setContent;
           this.questions = setContent.questions;
+          this.originalQuestions = setContent.questions.slice();
           this.setTitle = setContent.title;
           this.initialTitle = this.setTitle;
         });
+
       } else {
         this.setMessage = 'Add a new set';
         this.creation = true;
@@ -86,12 +90,13 @@ export class SetEditionPage implements OnInit {
         content: ''
       }
     };
+    console.log(this.originalQuestions);
     this.questions.push(newQuestion);
   }
 
   async validateInputs() {
     if (this.creation) {
-      this.questions = this.mapQuestions(this.questionContainers);
+      this.questions = this.mapQuestionComponents(this.questionContainers);
       this.questions.forEach(question => {
         if ((question.title === '' && question.answer.content !== '') || (question.answer.content === '' && question.title !== '')) {
           this.toastService.info(`Question n°${question.question_id} must be fulfilled`);
@@ -124,39 +129,46 @@ export class SetEditionPage implements OnInit {
     }
 
     if (this.edition) {
-      const newQuestions = this.mapQuestions(this.questionContainers);
-      console.log(newQuestions, this.questions);
+      const newQuestions = this.mapQuestionComponents(this.questionContainers);
+      this.originalQuestions = this.mapQuestions(this.originalQuestions);
+      console.log(newQuestions, this.originalQuestions);
 
-      if (newQuestions.length >= this.questions.length) {
+      if (newQuestions.length >= this.originalQuestions.length) {
         for (const question of newQuestions) {
-          const matchingQuestion = this.questions.find(q => q.question_id === question.question_id);
+          const matchingQuestion = this.originalQuestions.find(q => q.question_id === question.question_id);
           console.log(matchingQuestion);
           if (!matchingQuestion) {
+            console.log('A new question has been added');
             await this.dbService.addQuestion(question);
           } else {
             if (matchingQuestion.title !== question.title) {
+              console.log('Title changed for question :' + matchingQuestion.question_id);
               await this.dbService.editQuestion(this.setId, question.question_id, question.title);
             }
 
             if (matchingQuestion.answer.content !== question.answer.content) {
+              console.log('Answer changed for question :' + matchingQuestion.question_id);
               await this.dbService.editAnswer(this.setId, question.question_id, question.answer.content);
             }
           }
         }
       }
 
-      if (newQuestions.length < this.questions.length) {
-        for (const question of this.questions) {
+      if (newQuestions.length < this.originalQuestions.length) {
+        for (const question of this.originalQuestions) {
           const matchingQuestion = newQuestions.find(q => q.question_id === question.question_id);
 
           if (!matchingQuestion) {
+            console.log('A question has been removed');
             await this.dbService.deleteQuestion(this.setId, question.question_id);
           } else {
             if (matchingQuestion.title !== question.title) {
+              console.log('Title changed for question :' + matchingQuestion.question_id);
               await this.dbService.editQuestion(this.setId, question.question_id, question.title);
             }
 
             if (matchingQuestion.answer.content !== question.answer.content) {
+              console.log('Answer changed for question :' + matchingQuestion.question_id);
               await this.dbService.editAnswer(this.setId, question.question_id, question.answer.content);
             }
           }
@@ -172,7 +184,7 @@ export class SetEditionPage implements OnInit {
 
   }
 
-  mapQuestions(questionComponents: QueryList<QuestionContainerComponent>): Question[] {
+  mapQuestionComponents(questionComponents: QueryList<QuestionContainerComponent>): Question[] {
     const res: Question[] = [];
     let index = 0;
 
@@ -194,12 +206,38 @@ export class SetEditionPage implements OnInit {
     return res;
   }
 
+  mapQuestions(questions: Question[]): Question[] {
+    const res: Question[] = [];
+    let index = 0;
+
+    questions.filter(q => (q.title !== '' && q.answer.content !== '')).forEach(question => {
+      index += 1;
+      const returnedQuestion: Question = {
+        set_id: this.setId,
+        title: question.title,
+        question_id: index,
+        answer: {
+          set_id: this.setId,
+          content: question.answer.content,
+          question_id: index
+        }
+      };
+      res.push(returnedQuestion);
+    });
+
+    return res;
+  }
+
   async deleteSet() {
     const callback = async () => {
       await this.dbService.deleteSet(this.setId);
       this.router.navigateByUrl('/tabs/selection');
       this.toastService.info('Set successfully deleted !');
     };
-    await this.alertService.validation(`Delete set ${this.setTitle} ?`, 'Are you sure you want to delete this set ?', callback);
+    await this.alertService.validation(`Delete set "${this.setTitle}" ?`, 'Are you sure you want to delete this set ?', callback);
+  }
+
+  deleteQuestion(questionId: number) {
+    this.questions.splice(this.questions.findIndex(val => val.question_id === questionId), 1);
   }
 }

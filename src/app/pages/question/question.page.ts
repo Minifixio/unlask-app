@@ -38,6 +38,7 @@ export class QuestionPage implements OnInit {
   }
 
   init() {
+
     this.storageService.getQuestionAmountPref().then(res => {
       this.questionsAmount = res;
       this.questionsCount = 1;
@@ -45,13 +46,13 @@ export class QuestionPage implements OnInit {
 
     this.dbService.initDB().then(() => {
       this.dbService.getRandomQuestions().then(res => {
-        this.questions = res;
         console.log(res);
 
-        if (this.questions.length > 0) {
-          this.loading = false;
+        if (res.length > 0) {
           this.rightQuestionId = res[0].question_id;
           this.questionTitle = res[0].question;
+          this.questions = res.sort(() => Math.random() - 0.5); // Shuffle the array
+          this.loading = false;
           this.listenerService.startListening();
 
           const animationInterval = setInterval(() => {
@@ -62,6 +63,9 @@ export class QuestionPage implements OnInit {
               clearInterval(animationInterval);
             }
           }, 100);
+        } else {
+          this.questions = [];
+          this.loading = false;
         }
 
       });
@@ -123,6 +127,7 @@ export class QuestionPage implements OnInit {
 
   finish() {
     setTimeout(() => {
+      this.questions = [];
       mayflower.moveTaskToBack();
       this.router.navigateByUrl('/tabs/selection');
     }, 1000);
