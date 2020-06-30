@@ -70,4 +70,16 @@ export class PreferencesPage implements OnInit {
     const date = new Date(`1995-12-17T${hours}:${minutes}:00`);
     return date.toISOString();
   }
+
+  changeRangeStartTime(event: CustomEvent) {
+    const selectedDate = new Date(event.detail.value);
+    console.log(`${selectedDate.getHours()}:${selectedDate.getHours()}`);
+    this.storageService.setTimeRangeStart(`${selectedDate.getHours()}:${selectedDate.getHours()}`);
+  }
+
+  changeRangeEndTime(event: CustomEvent) {
+    const selectedDate = new Date(event.detail.value);
+    console.log(`${selectedDate.getHours()}:${selectedDate.getHours()}`);
+    this.storageService.setTimeRangeEnd(`${selectedDate.getHours()}:${selectedDate.getHours()}`);
+  }
 }

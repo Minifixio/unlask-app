@@ -31,10 +31,10 @@ export class QuestionPage implements OnInit {
   ngOnInit() { }
 
   ionViewDidEnter() {
+    // this.testQuestions();
     console.log('Questions loaded');
     this.loading = true;
     setTimeout(() => { this.init(); }, 500);
-    // this.testQuestions();
   }
 
   init() {

@@ -24,6 +24,7 @@ export class ListenerService {
     private httpService: HttpService,
     private powerManagement: PowerManagement,
     private router: Router,
+    private storageService: StorageService
   ) {}
 
   startListening() {
@@ -79,10 +80,24 @@ export class ListenerService {
   async subUnlockEvent() {
 
     cordova.plugins.ScreenEvents.listenerInit(async (event: string) => {
-      window.plugins.bringtofront();
-      await this.platform.ready();
-      await this.isAppInForeground;
-      await this.router.navigateByUrl('/question');
+      this.storageService.getTimeRangeEnabledPref().then(async(pref) => {
+        if (pref) {
+          this.storageService.getTimeRangePref().then(async(range) => {
+            const today = new Date();
+            if (this.isInTimeRange(range.start, range.end, today.getHours(), today.getMinutes())) {
+              window.plugins.bringtofront();
+              await this.platform.ready();
+              await this.isAppInForeground;
+              await this.router.navigateByUrl('/question');
+            }
+          });
+        } else {
+          window.plugins.bringtofront();
+          await this.platform.ready();
+          await this.isAppInForeground;
+          await this.router.navigateByUrl('/question');
+        }
+      });
       // await this.httpService.postEvent(event);
     });
   }
@@ -90,5 +105,17 @@ export class ListenerService {
   stopListening() {
     BackgroundFetch.stop();
     clearInterval(this.listenTask);
+  }
+
+  isInTimeRange(start: string, end: string, currentHours: number, currentMinutes: number): boolean {
+    const startTime = Number(start.split(':')[0]) * 60 + Number(start.split(':')[1]);
+    const endTime = Number(end.split(':')[0]) * 60 + Number(end.split(':')[1]);
+    const currentTime = currentHours * 60 + currentMinutes;
+
+    if (currentTime > startTime && currentTime < endTime) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

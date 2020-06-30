@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <div class="error-div" *ngIf="questions && questions.length === 0">
+  <div class="error-div" *ngIf="questions && questions.length === 0 && !loading">
     <ion-img class="logo-img" src="./assets/icon.png"></ion-img>
     <h1 class="error-title">
       It looks like you haven't added sets yet !

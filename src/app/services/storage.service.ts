@@ -102,8 +102,17 @@ export class StorageService {
     }
   }
 
-  async setTimeRangePref(start: string, end: string): Promise<void> {
-    await this.nativeStorage.setItem('time_range', {start, end});
+  async setTimeRangeEnd( end: string): Promise<void> {
+    const timeRange = await this.getTimeRangePref();
+    timeRange.end = end;
+    await this.nativeStorage.setItem('time_range', timeRange);
+    console.log(await this.nativeStorage.getItem('time_range'));
+  }
+
+  async setTimeRangeStart(start: string): Promise<void> {
+    const timeRange = await this.getTimeRangePref();
+    timeRange.start = start;
+    await this.nativeStorage.setItem('time_range', timeRange);
     console.log(await this.nativeStorage.getItem('time_range'));
   }
 
