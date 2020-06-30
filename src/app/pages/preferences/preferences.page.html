@@ -43,4 +43,25 @@
       <ion-select-option value="05">5</ion-select-option>
     </ion-select>
   </ion-item>
+
+  <ion-item-divider>
+    <ion-label>
+      Questions time range
+    </ion-label>
+  </ion-item-divider>
+
+  <ion-item>
+    <span class="date-span">
+      <ion-label>From :</ion-label>
+      <ion-datetime display-format="HH:mm" picker-format="HH:mm" [value]="hourToDate(timeRange.start)"></ion-datetime>
+    </span>
+
+
+    <span class="date-span" id="to-span">
+      <ion-label>to :</ion-label>
+      <ion-datetime display-format="HH:mm" picker-format="HH:mm" [value]="hourToDate(timeRange.end)"></ion-datetime>
+    </span>
+
+    <ion-toggle (ionChange)="timeRangeEnabledPref($event)" slot="end" [checked]="timeRangeEnabled"></ion-toggle>
+  </ion-item>
 </ion-content>

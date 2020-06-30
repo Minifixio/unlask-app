@@ -13,6 +13,8 @@ export class PreferencesPage implements OnInit {
   notificationActive = true;
   questionsAmount = '01';
   appEnabled = true;
+  timeRangeEnabled = false;
+  timeRange = {start: '08:00', end: '19:00'};
 
   constructor(
     private notificationService: NotificationsService,
@@ -24,6 +26,8 @@ export class PreferencesPage implements OnInit {
     this.storageService.getNotificationPref().then(res => this.notificationActive = res);
     this.storageService.getEnabledPref().then(res => this.appEnabled = res);
     this.storageService.getQuestionAmountPref().then(res => this.questionsAmount = String(res).padStart(2, '0'));
+    this.storageService.getTimeRangeEnabledPref().then(res => this.timeRangeEnabled = res);
+    this.storageService.getTimeRangePref().then(res => this.timeRange = res);
   }
 
   async notificationPref(event: CustomEvent) {
@@ -49,5 +53,21 @@ export class PreferencesPage implements OnInit {
       await this.storageService.setEnabledPref(false);
       this.listenerService.stopListening();
     }
+  }
+
+  async timeRangeEnabledPref(event: CustomEvent) {
+    this.timeRangeEnabled = event.detail.checked;
+    if (event.detail.checked) {
+      await this.storageService.setTimeRangeEnabledPref(true);
+    } else {
+      await this.storageService.setTimeRangeEnabledPref(false);
+    }
+  }
+
+  hourToDate(time: string) {
+    const hours = time.split(':')[0].padStart(2, '0');
+    const minutes = time.split(':')[1].padStart(2, '0');
+    const date = new Date(`1995-12-17T${hours}:${minutes}:00`);
+    return date.toISOString();
   }
 }

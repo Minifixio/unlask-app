@@ -11,11 +11,16 @@ export class StorageService {
 
   DEFAULT_NOTIFICATION_PREF = true;
   DEFAULT_APP_ENABLED_PREF = true;
+  DEFAULT_APP_TIME_RANGE_PREF = {start: '08:00', end: '19:00'};
+  DEFAULT_APP_TIME_RANGE_ENABLED_PREF = false;
+
   DEFAULT_QUESTION_AMOUNT_PREF = 1;
 
   notificationPref: boolean;
   questionAmountPref: number;
   appEnabledPref: boolean;
+  timeRangeEnabledPref: boolean;
+  timerangePref: {start: string, end: string};
 
   constructor(
     private nativeStorage: NativeStorage
@@ -41,7 +46,6 @@ export class StorageService {
     } else {
       return this.notificationPref;
     }
-
   }
 
   async setNotificationPref(pref: boolean): Promise<void> {
@@ -69,12 +73,65 @@ export class StorageService {
     } else {
       return this.appEnabledPref;
     }
-
   }
 
   async setEnabledPref(pref: boolean): Promise<void> {
     await this.nativeStorage.setItem('enabled', pref);
     console.log(await this.nativeStorage.getItem('enabled'));
+  }
+
+  async getTimeRangePref(): Promise<{start: string, end: string}> {
+    let pref: {start: string, end: string};
+
+    if (this.timerangePref === undefined) {
+      try {
+        pref = await this.nativeStorage.getItem('time_range');
+      } catch (e) {
+        console.log('No app time range pref');
+      }
+
+      console.log('Time range pref:', pref);
+      if (pref === undefined) {
+       await this.nativeStorage.setItem('time_range', this.DEFAULT_APP_TIME_RANGE_PREF);
+       return this.DEFAULT_APP_TIME_RANGE_PREF;
+      } else {
+        return pref;
+      }
+    } else {
+      return this.timerangePref;
+    }
+  }
+
+  async setTimeRangePref(start: string, end: string): Promise<void> {
+    await this.nativeStorage.setItem('time_range', {start, end});
+    console.log(await this.nativeStorage.getItem('time_range'));
+  }
+
+  async getTimeRangeEnabledPref(): Promise<boolean> {
+    let pref: boolean;
+
+    if (this.timeRangeEnabledPref === undefined) {
+      try {
+        pref = await this.nativeStorage.getItem('time_range_enabled');
+      } catch (e) {
+        console.log('No app time range enabled pref');
+      }
+
+      console.log('Time range enabled pref:', pref);
+      if (pref === undefined) {
+       await this.nativeStorage.setItem('time_range_enabled', this.DEFAULT_APP_TIME_RANGE_ENABLED_PREF);
+       return this.DEFAULT_APP_TIME_RANGE_ENABLED_PREF;
+      } else {
+        return pref;
+      }
+    } else {
+      return this.timeRangeEnabledPref;
+    }
+  }
+
+  async setTimeRangeEnabledPref(pref: boolean): Promise<void> {
+    await this.nativeStorage.setItem('time_range_enabled', pref);
+    console.log(await this.nativeStorage.getItem('time_range_enabled'));
   }
 
   async setQuestionAmountPref(pref: number): Promise<void> {
