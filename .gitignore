@@ -31,3 +31,7 @@ npm-debug.log*
 !/plugins/cordova-plugin-screenevents
 
 /www
+commands.txt
+my-release-key.keystore
+exports/android/unsigned/unlask-0-0-1-unsigned.apk
+exports/android/signed/unlask-0-0-1.apk
