@@ -51,16 +51,27 @@
   </ion-item-divider>
 
   <ion-item>
-    <span class="date-span">
-      <ion-label>From :</ion-label>
-      <ion-datetime (ionChange)="changeRangeStartTime($event)" display-format="HH:mm" picker-format="HH:mm" [value]="hourToDate(timeRange.start)"></ion-datetime>
-    </span>
 
+    <ion-grid>
+      <ion-row>
 
-    <span class="date-span" id="to-span">
-      <ion-label>to :</ion-label>
-      <ion-datetime (ionChange)="changeRangeEndTime($event)" display-format="HH:mm" picker-format="HH:mm" [value]="hourToDate(timeRange.end)"></ion-datetime>
-    </span>
+        <ion-col>
+          <ion-label class="date-label">
+            From :
+          </ion-label>
+          <ion-datetime (ionChange)="changeRangeStartTime($event)" display-format="HH:mm" picker-format="HH:mm" [value]="hourToDate(timeRange.start)"></ion-datetime>
+        </ion-col>
+
+        <ion-col>
+          <ion-label class="date-label">
+            to :
+          </ion-label>
+          <ion-datetime (ionChange)="changeRangeEndTime($event)" display-format="HH:mm" picker-format="HH:mm" [value]="hourToDate(timeRange.end)"></ion-datetime>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+
 
     <ion-toggle (ionChange)="timeRangeEnabledPref($event)" slot="end" [checked]="timeRangeEnabled"></ion-toggle>
   </ion-item>

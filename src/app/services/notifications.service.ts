@@ -41,10 +41,32 @@ export class NotificationsService {
         return;
       }
 
+      const timeRangeEnabled = await this.storageService.getTimeRangeEnabledPref();
+      const appEnabled = await this.storageService.getEnabledPref();
+
+      let timeRange: {start: string, end: string};
+      let message: string;
+      let title: string;
+
+      if (timeRangeEnabled) {
+        timeRange = await this.storageService.getTimeRangePref();
+      }
+
+      if (appEnabled) {
+        title = 'UNLASK APP : Enabled';
+        if (timeRange) {
+          message = `Running from ${timeRange.start} to ${timeRange.end}`;
+        } else {
+          message = `Always running`;
+        }
+      } else {
+        title = 'UNLASK APP : Disabled';
+      }
+
       this.localNotifications.schedule({
         id: 1,
-        title: `UNLASK APP`,
-        text: 'Click to disable it',
+        title,
+        text: message ? message : null,
         smallIcon: 'res://transparent_icon',
         sticky: true,
         foreground: true,
@@ -59,6 +81,30 @@ export class NotificationsService {
           await this.router.navigateByUrl('/tabs/preferences');
         }
       });
+  }
+
+  async updateTimeRange(start: string, end: string) {
+    console.log(`Running from ${start} to ${end}`);
+    this.localNotifications.update({
+      id: 1,
+      text: `Running from ${start} to ${end}`
+    });
+  }
+
+  async disableTimeRange() {
+    this.localNotifications.update({
+      id: 1,
+      text: `Always running`
+    });
+  }
+
+  async updateAppSatus(status: boolean) {
+
+    this.localNotifications.update({
+      id: 1,
+      title: status ? 'UNLASK APP : Enabled' : 'UNLASK APP : Disabled',
+      text: null
+    });
   }
 
   async enableNotification() {

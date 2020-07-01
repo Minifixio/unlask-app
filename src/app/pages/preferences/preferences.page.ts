@@ -48,9 +48,11 @@ export class PreferencesPage implements OnInit {
     this.appEnabled = event.detail.checked;
     if (event.detail.checked) {
       await this.storageService.setEnabledPref(true);
+      await this.notificationService.stickNotification();
       this.listenerService.startListening();
     } else {
       await this.storageService.setEnabledPref(false);
+      await this.notificationService.updateAppSatus(false);
       this.listenerService.stopListening();
     }
   }
@@ -59,8 +61,10 @@ export class PreferencesPage implements OnInit {
     this.timeRangeEnabled = event.detail.checked;
     if (event.detail.checked) {
       await this.storageService.setTimeRangeEnabledPref(true);
+      await this.notificationService.updateTimeRange(this.timeRange.start, this.timeRange.end);
     } else {
       await this.storageService.setTimeRangeEnabledPref(false);
+      await this.notificationService.disableTimeRange();
     }
   }
 
@@ -71,15 +75,19 @@ export class PreferencesPage implements OnInit {
     return date.toISOString();
   }
 
-  changeRangeStartTime(event: CustomEvent) {
+  async changeRangeStartTime(event: CustomEvent) {
     const selectedDate = new Date(event.detail.value);
-    console.log(`${selectedDate.getHours()}:${selectedDate.getHours()}`);
-    this.storageService.setTimeRangeStart(`${selectedDate.getHours()}:${selectedDate.getHours()}`);
+    const time = `${selectedDate.getHours().toString().padStart(2, '0')}:${selectedDate.getMinutes().toString().padStart(2, '0')}`;
+    console.log(time);
+    await this.storageService.setTimeRangeStart(time);
+    await this.notificationService.updateTimeRange(time, this.timeRange.end);
   }
 
-  changeRangeEndTime(event: CustomEvent) {
+  async changeRangeEndTime(event: CustomEvent) {
     const selectedDate = new Date(event.detail.value);
-    console.log(`${selectedDate.getHours()}:${selectedDate.getHours()}`);
-    this.storageService.setTimeRangeEnd(`${selectedDate.getHours()}:${selectedDate.getHours()}`);
+    const time = `${selectedDate.getHours().toString().padStart(2, '0')}:${selectedDate.getMinutes().toString().padStart(2, '0')}`;
+    console.log(time);
+    await this.storageService.setTimeRangeEnd(time);
+    await this.notificationService.updateTimeRange(this.timeRange.start, time);
   }
 }

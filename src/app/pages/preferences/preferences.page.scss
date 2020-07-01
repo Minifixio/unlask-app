@@ -1,9 +1,9 @@
-.date-span {
+.date-label {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-}
+    align-items: baseline;
+} 
 
-#to-span {
-    margin-left: 20%;
+ion-col {
+    display: flex;
+    align-items: baseline;
 }
