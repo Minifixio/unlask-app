@@ -22,8 +22,8 @@ export class DatabaseService {
   async initDB(): Promise<void> {
       if (!this.db || this.db.openDBs.sets !== 'OPEN') {
         try {
-          // await this.sqlite.echoTest();
-          // await this.sqlite.selfTest();
+          await this.sqlite.echoTest();
+          await this.sqlite.selfTest();
           this.db = await this.sqlite.create({name: 'sets', location: 'default'});
           await this.db.open();
           // tslint:disable-next-line: max-line-length
@@ -212,6 +212,7 @@ export class DatabaseService {
 
       // In order to make sure questions from other sets with same question_id don't match the right answer
       res.map(q => {
+        q.set_name = selectedSet.title;
         if (q.set_id !== selectedSet.set_id) {
           q.question_id = 99;
         }

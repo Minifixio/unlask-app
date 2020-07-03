@@ -80,7 +80,9 @@ export class PreferencesPage implements OnInit {
     const time = `${selectedDate.getHours().toString().padStart(2, '0')}:${selectedDate.getMinutes().toString().padStart(2, '0')}`;
     console.log(time);
     await this.storageService.setTimeRangeStart(time);
-    await this.notificationService.updateTimeRange(time, this.timeRange.end);
+    if (this.appEnabled) {
+      await this.notificationService.updateTimeRange(time, this.timeRange.end);
+    }
   }
 
   async changeRangeEndTime(event: CustomEvent) {
@@ -88,6 +90,9 @@ export class PreferencesPage implements OnInit {
     const time = `${selectedDate.getHours().toString().padStart(2, '0')}:${selectedDate.getMinutes().toString().padStart(2, '0')}`;
     console.log(time);
     await this.storageService.setTimeRangeEnd(time);
-    await this.notificationService.updateTimeRange(this.timeRange.start, time);
+
+    if (this.appEnabled) {
+      await this.notificationService.updateTimeRange(this.timeRange.start, time);
+    }
   }
 }

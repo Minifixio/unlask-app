@@ -80,30 +80,45 @@ export class ListenerService {
   async subUnlockEvent() {
 
     cordova.plugins.ScreenEvents.listenerInit(async (event: string) => {
-      this.storageService.getTimeRangeEnabledPref().then(async(pref) => {
-        if (pref) {
-          this.storageService.getTimeRangePref().then(async(range) => {
-            const today = new Date();
-            if (this.isInTimeRange(range.start, range.end, today.getHours(), today.getMinutes())) {
+
+      this.storageService.getEnabledPref().then(enabled => {
+        if (enabled) {
+          this.storageService.getTimeRangeEnabledPref().then(async (pref) => {
+            if (pref) {
+              this.storageService.getTimeRangePref().then(async (range) => {
+                const today = new Date();
+                if (this.isInTimeRange(range.start, range.end, today.getHours(), today.getMinutes())) {
+                  window.plugins.bringtofront();
+                  await this.platform.ready();
+                  await this.isAppInForeground;
+                  await this.router.navigateByUrl('/question');
+                }
+              });
+            } else {
               window.plugins.bringtofront();
               await this.platform.ready();
               await this.isAppInForeground;
               await this.router.navigateByUrl('/question');
             }
           });
-        } else {
-          window.plugins.bringtofront();
-          await this.platform.ready();
-          await this.isAppInForeground;
-          await this.router.navigateByUrl('/question');
         }
       });
+
       // await this.httpService.postEvent(event);
     });
   }
 
   stopListening() {
-    BackgroundFetch.stop();
+    BackgroundFetch.stop(() => {
+      console.log('All tasks stopped successfully');
+    }, (e) => {
+      console.log(e);
+    });
+    BackgroundFetch.stopTask('cordova-background-fetch', () => {
+      console.log('cordova-background-fetch stopped successfully');
+    }, (e) => {
+      console.log(e);
+    });
     clearInterval(this.listenTask);
   }
 

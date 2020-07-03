@@ -103,7 +103,7 @@ export class NotificationsService {
     this.localNotifications.update({
       id: 1,
       title: status ? 'UNLASK APP : Enabled' : 'UNLASK APP : Disabled',
-      text: null
+      text: ''
     });
   }
 
