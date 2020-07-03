@@ -2,6 +2,7 @@
   <h1 *ngIf="questionTitle" class="question-title">
     {{questionTitle}}
   </h1>
+  <ion-label class="question-label" *ngIf="setName">from {{setName}}</ion-label>
   <div class="answers-div" *ngIf="questions && !loading">
     <div *ngFor="let question of questions" class="answers-solo-div">
       <button (click)="select(question.question_id)" [class]="question.question_id == rightQuestionId ? 'right-button': 'wrong-button'">

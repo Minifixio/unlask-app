@@ -20,6 +20,7 @@ export class QuestionPage implements OnInit {
   questionsCount: number;
   loading: boolean;
   animationLoading: boolean;
+  setName: string;
 
   constructor(
     private dbService: DatabaseService,
@@ -51,6 +52,7 @@ export class QuestionPage implements OnInit {
         if (res.length > 0) {
           this.rightQuestionId = res[0].question_id;
           this.questionTitle = res[0].question;
+          this.setName = res[0].set_name;
           this.questions = res.sort(() => Math.random() - 0.5); // Shuffle the array
           this.loading = false;
           this.listenerService.startListening();
@@ -112,6 +114,7 @@ export class QuestionPage implements OnInit {
           this.questions = nextQuestions;
           this.rightQuestionId = nextQuestions[0].question_id;
           this.questionTitle = nextQuestions[0].question;
+          this.setName = nextQuestions[0].set_name;
           const animationInterval = setInterval(() => {
             if (document.getElementsByClassName('right-button')[0]) {
               this.animateRight();
@@ -170,46 +173,46 @@ export class QuestionPage implements OnInit {
 
   }
 
-  testQuestions() {
-    this.loading = false;
+  // testQuestions() {
+  //   this.loading = false;
 
-    this.questions = [
-      {
-        set_id: 1,
-        question_id: 0,
-        question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
-        answer: 'He bien écoute tu devrais essayer d\'y réfléchir plus en profondeur'
-      },
-      {
-        set_id: 1,
-        question_id: 1,
-        question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
-        answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet scelerisque justo'
-      },
-      {
-        set_id: 1,
-        question_id: 2,
-        question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
-        answer: 'Le Saint Graal'
-      },
-      {
-        set_id: 1,
-        question_id: 3,
-        question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
-        answer: '2'
-      }
-    ];
+  //   this.questions = [
+  //     {
+  //       set_id: 1,
+  //       question_id: 0,
+  //       question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
+  //       answer: 'He bien écoute tu devrais essayer d\'y réfléchir plus en profondeur'
+  //     },
+  //     {
+  //       set_id: 1,
+  //       question_id: 1,
+  //       question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
+  //       answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet scelerisque justo'
+  //     },
+  //     {
+  //       set_id: 1,
+  //       question_id: 2,
+  //       question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
+  //       answer: 'Le Saint Graal'
+  //     },
+  //     {
+  //       set_id: 1,
+  //       question_id: 3,
+  //       question: 'Pourquoi ai je choisi d\'écrire cette quetion ? Je ne sais point',
+  //       answer: '2'
+  //     }
+  //   ];
 
-    this.questionTitle = this.questions[0].question;
-    this.rightQuestionId =  this.questions[0].question_id;
+  //   this.questionTitle = this.questions[0].question;
+  //   this.rightQuestionId =  this.questions[0].question_id;
 
-    const animationInterval = setInterval(() => {
-      if (document.getElementsByClassName('right-button')[0]) {
-        this.animateRight();
-        this.animateWrong();
-        clearInterval(animationInterval);
-      }
-    }, 100);
-  }
+  //   const animationInterval = setInterval(() => {
+  //     if (document.getElementsByClassName('right-button')[0]) {
+  //       this.animateRight();
+  //       this.animateWrong();
+  //       clearInterval(animationInterval);
+  //     }
+  //   }, 100);
+  // }
 
 }

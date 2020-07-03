@@ -1,11 +1,13 @@
 .question-title {
-    text-align: center;
+	text-align: center;
+	margin-bottom: 0;
 }
 
 .answers-div {
     display: flex;
     justify-content: center;
-    flex-direction: column;
+	flex-direction: column;
+	margin-top: 10px;
 }
 
 .answers-solo-div {
@@ -19,7 +21,9 @@
 .count-label {
 	position: absolute;
     bottom: 5px;
-    right: 5px;
+	right: 5px;
+	margin: 15px;
+    white-space: break-spaces;
 }
 
 .error-div {
@@ -45,6 +49,12 @@
 	height: 40px;
 }
 
+.question-label {
+	margin-bottom: 10px;
+	opacity: 70%;
+    font-style: italic;
+}
+
 ion-button {
     margin: 10px;
     font-size: x-large;
@@ -52,9 +62,8 @@ ion-button {
     width: 95%;
 }
 
-ion-label {
-    margin: 15px;
-    white-space: break-spaces;
+ion-content {
+	text-align: center;
 }
 
 $base-duration: 500ms;
