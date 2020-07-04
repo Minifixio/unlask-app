@@ -7,8 +7,7 @@ An app that asks you questions every time you unlock your phone...
 ## Background
 
 The number of times we turn on our phone just to look at the screen or to unthinkingly consult social networks is countless...
-Unlask's goal is to transform these little moments into smarter ones and also to and push you to reduce the use of your smartphone.
-
+Unlask's goal is to transform these little moments into smarter ones and to also, push you to reduce the use of your smartphone.
 <br>
 
 ## Features 
