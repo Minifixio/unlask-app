@@ -1,5 +1,7 @@
 # Unlask
 
+![](.screenshots/preview_5.png) 
+
 An app that asks you questions every time you unlock your phone...
 
 <br>
@@ -44,4 +46,3 @@ The preference page          |   The set editing page
 
 <br>
 
-![](.screenshots/preview_5.png) 
